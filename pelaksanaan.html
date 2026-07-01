@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Materi MPLS Ramah – SAPA SMAN 1 Belitang</title>
+  <meta name="description" content="Dashboard Materi Masa Pengenalan Lingkungan Sekolah (MPLS) Ramah 2026 SMAN 1 Belitang. Pelajari ketentuan umum dan akses modul-modul interaktif." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ═══════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy-950: #03081a;
+      --navy-900: #060e2b;
+      --navy-800: #0b1a45;
+      --navy-700: #112260;
+      --blue-600: #1a3fa6;
+      --blue-500: #2563eb;
+      --blue-400: #3b82f6;
+      --blue-300: #60a5fa;
+      --sky-400:  #38bdf8;
+      --sky-300:  #7dd3fc;
+      --cyan-400: #22d3ee;
+      --teal-400: #2dd4bf;
+      --teal-500: #14b8a6;
+      --red-500:  #ef4444;
+      --white:    #ffffff;
+      --gray-50:  #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --font: 'Inter', system-ui, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --shadow-card: 0 4px 24px rgba(0,0,0,0.12);
+      --transition: 0.32s cubic-bezier(.4,0,.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--gray-50);
+      color: var(--gray-800);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--navy-900); }
+    ::-webkit-scrollbar-thumb { background: var(--blue-500); border-radius: 99px; }
+
+    /* ═══════════════════════════════════════════
+       ANIMATIONS
+    ═══════════════════════════════════════════ */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50%       { transform: translateY(-22px) rotate(2deg); }
+    }
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(30px, -20px) scale(1.08); }
+      66%       { transform: translate(-20px, 15px) scale(0.95); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes pulseRing {
+      0%   { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    @keyframes navSlideDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes tagPop {
+      0%   { opacity: 0; transform: scale(0.85) translateY(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .anim-slide-up { animation: slideUp 0.7s cubic-bezier(.4,0,.2,1) both; }
+    .anim-fade-in  { animation: fadeIn 0.8s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.22s; }
+    .delay-3 { animation-delay: 0.36s; }
+    .delay-4 { animation-delay: 0.52s; }
+    .delay-5 { animation-delay: 0.68s; }
+
+    /* ═══════════════════════════════════════════
+    /* ═══════════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════════ */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(6,14,43,0.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      transition: background 0.3s;
+    }
+
+    .navbar.scrolled {
+      background: rgba(6,14,43,0.95);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    .navbar .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      gap: 1rem;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-brand-img {
+      height: 40px;
+      width: 40px;
+      object-fit: contain;
+      border-radius: 8px;
+      filter: drop-shadow(0 2px 8px rgba(56,189,248,0.4));
+    }
+
+    .nav-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .nav-brand-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+    .nav-brand-sub {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--sky-300);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.72);
+      transition: 0.3s cubic-bezier(.4,0,.2,1);
+      white-space: nowrap;
+    }
+
+    .nav-link:hover { color: var(--white); background: rgba(255,255,255,0.1); }
+    .nav-link.active { background: rgba(37,99,235,0.3); color: var(--sky-300); }
+
+    .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+    .btn-nav-admin {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: var(--white);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .btn-nav-admin:hover {
+      background: rgba(37,99,235,0.35);
+      border-color: var(--blue-500);
+      box-shadow: 0 0 14px rgba(37,99,235,0.4);
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 38px;
+      height: 38px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 6px 8px;
+    }
+
+    .nav-toggle span {
+      display: block;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: 0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    .nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding: 0.75rem 1rem 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .mobile-nav.open { display: flex; }
+    .mobile-nav .nav-link { font-size: 0.95rem; padding: 0.65rem 1rem; }
+
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding-top: 68px;
+    }
+    .hero-bg-slider {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out, transform 4s ease-in-out;
+      transform: scale(1.05);
+    }
+    .hero-bg-slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .hero-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(3, 8, 26, 0.92) 0%,
+        rgba(6, 14, 43, 0.88) 30%,
+        rgba(10, 42, 110, 0.80) 70%,
+        rgba(20, 103, 184, 0.75) 100%
+      );
+    }
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .hero-orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(37,99,235,0.3) 0%, transparent 70%);
+      top: -120px; left: -100px;
+      animation: floatOrb 12s ease-in-out infinite;
+    }
+    .hero-orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(56,189,248,0.25) 0%, transparent 70%);
+      bottom: -80px; right: 15%;
+      animation: floatOrb 15s ease-in-out infinite reverse;
+    }
+    .hero-orb-3 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(34,211,238,0.2) 0%, transparent 70%);
+      top: 30%; left: 50%;
+      animation: floatOrb 10s ease-in-out infinite 2s;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    .hero .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 3rem;
+      padding: 5rem 0 4rem;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(56,189,248,0.12);
+      border: 1px solid rgba(56,189,248,0.3);
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--sky-300);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      animation: tagPop 0.6s ease both;
+    }
+    .tag-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--sky-400);
+      box-shadow: 0 0 0 2px rgba(56,189,248,0.4);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .tag-dot::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(56,189,248,0.5);
+      animation: pulseRing 1.8s ease-out infinite;
+    }
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, var(--sky-300) 0%, var(--cyan-400) 40%, var(--teal-400) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite;
+    }
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.8;
+      margin-bottom: 2.25rem;
+      max-width: 520px;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-hero-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.875rem 1.75rem;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-400));
+      color: var(--white);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 32px rgba(37,99,235,0.45);
+      transition: var(--transition);
+    }
+    .btn-hero-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(37,99,235,0.6);
+      background: linear-gradient(135deg, var(--blue-400), var(--sky-400));
+    }
+    .btn-hero-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.875rem 1.75rem;
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      transition: var(--transition);
+    }
+    .btn-hero-outline:hover {
+      background: rgba(255,255,255,0.14);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-3px);
+    }
+    .hero-stats {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      padding: 0.75rem 1.25rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(12px);
+    }
+    .hero-stat-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+    }
+    .hero-stat-lbl {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+    .hero-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .hero-logo-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-logo-glow {
+      position: absolute;
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56,189,248,0.25) 0%, transparent 70%);
+      filter: blur(30px);
+      animation: floatOrb 8s ease-in-out infinite;
+    }
+    .floating-logo {
+      position: relative;
+      z-index: 1;
+      height: 300px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 16px 48px rgba(0,0,0,0.45)) drop-shadow(0 0 40px rgba(56,189,248,0.3));
+      animation: floatY 5s ease-in-out infinite;
+    }
+
+    /* ═══════════════════════════════════════════
+       WAVE
+    ═══════════════════════════════════════════ */
+    .wave-divider { 
+      line-height: 0; 
+      background: transparent; 
+      margin-top: -59px; 
+      position: relative; 
+      z-index: 10; 
+    }
+    .wave-divider svg { display: block; }
+
+    /* ═══════════════════════════════════════════
+       RECAP GALLERY
+    ═══════════════════════════════════════════ */
+    .recap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .recap-item {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(13, 45, 110, 0.15);
+      cursor: pointer;
+    }
+    .recap-item img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .recap-item:hover img { transform: scale(1.08); }
+    .recap-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(3,8,26,0.85) 0%, transparent 50%);
+      display: flex;
+      align-items: flex-end;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .recap-item:hover .recap-overlay { opacity: 1; }
+    .recap-overlay span {
+      color: white;
+      font-weight: 700;
+      font-size: 1.15rem;
+      transform: translateY(15px);
+      transition: transform 0.4s ease;
+    }
+    .recap-item:hover .recap-overlay span { transform: translateY(0); }
+    @media (max-width: 768px) {
+      .recap-overlay { opacity: 1; }
+      .recap-overlay span { transform: translateY(0); }
+    }
+
+    /* ═══════════════════════════════════════════
+       SECTIONS
+    ═══════════════════════════════════════════ */
+    .section { padding: 5rem 0; }
+    .section-alt { background: var(--white); }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      background: rgba(37,99,235,0.1);
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--blue-500);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-title-lg {
+      font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+    .section-title-lg .accent { color: var(--blue-500); }
+    .section-subtitle-text {
+      font-size: 1.05rem;
+      color: var(--gray-500);
+      max-width: 560px;
+      margin: 0.75rem 0 0;
+      line-height: 1.75;
+    }
+    .text-center { text-align: center; }
+    .text-center .section-subtitle-text { margin-left: auto; margin-right: auto; }
+    .section-head { margin-bottom: 3.5rem; }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ═══════════════════════════════════════════
+       MATERIAL CARDS
+    ═══════════════════════════════════════════ */
+    .material-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .material-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .material-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+    }
+    .material-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.75rem;
+    }
+    .material-card-icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .material-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+    .hdr-navy { background: linear-gradient(135deg, var(--navy-800), var(--blue-600)); }
+    .hdr-teal { background: linear-gradient(135deg, #0d7a6d, var(--teal-500)); }
+    .hdr-blue { background: linear-gradient(135deg, var(--blue-600), var(--blue-400)); }
+    .hdr-red  { background: linear-gradient(135deg, #b91c1c, var(--red-500)); }
+    .material-card-body { padding: 1.75rem; }
+    .material-card-body p {
+      color: var(--gray-700);
+      line-height: 1.85;
+      margin-bottom: 1rem;
+      font-size: 0.96rem;
+    }
+    .material-card-body p:last-child { margin-bottom: 0; }
+
+    /* Asas list */
+    .asas-list { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; }
+    .asas-list li { display: flex; gap: 1rem; align-items: flex-start; }
+    .asas-num {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal-500), #0d7a6d);
+      color: var(--white);
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .asas-text { color: var(--gray-700); font-size: 0.95rem; line-height: 1.75; }
+    .asas-text strong { color: var(--gray-900); }
+
+    /* Info box */
+    .info-box {
+      background: linear-gradient(135deg, rgba(37,99,235,0.06), rgba(56,189,248,0.06));
+      border: 1px solid rgba(37,99,235,0.15);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+    }
+    .info-box h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--blue-600);
+      margin-bottom: 0.75rem;
+    }
+    .info-box ol {
+      margin-left: 1.25rem;
+      color: var(--gray-700);
+      font-size: 0.93rem;
+      line-height: 1.85;
+    }
+
+    /* Prohibition list */
+    .prohibition-list { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .prohibition-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      color: var(--gray-700);
+      line-height: 1.7;
+    }
+    .prohibition-list li::before { content: '\26D4'; flex-shrink: 0; margin-top: 1px; }
+
+    /* ═══════════════════════════════════════════
+       MODULE CARDS
+    ═══════════════════════════════════════════ */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .module-card {
+      position: relative;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      padding: 2.25rem 2rem 2rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: var(--transition);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    }
+    .module-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(37,99,235,0.04), rgba(56,189,248,0.04));
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .module-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 64px rgba(37,99,235,0.18);
+      border-color: rgba(37,99,235,0.3);
+    }
+    .module-card:hover::before { opacity: 1; }
+    .module-card-stripe {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .stripe-blue  { background: linear-gradient(90deg, var(--blue-500), var(--sky-400)); }
+    .stripe-teal  { background: linear-gradient(90deg, var(--teal-500), var(--cyan-400)); }
+    .stripe-indigo { background: linear-gradient(90deg, #6366f1, var(--blue-400)); }
+    .module-icon-wrap {
+      width: 64px; height: 64px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 1.25rem;
+      transition: var(--transition);
+    }
+    .module-card:hover .module-icon-wrap { transform: scale(1.1) rotate(-3deg); }
+    .icon-bg-blue   { background: rgba(37,99,235,0.1); }
+    .icon-bg-teal   { background: rgba(20,184,166,0.1); }
+    .icon-bg-indigo { background: rgba(99,102,241,0.1); }
+    .module-card-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .module-card-desc {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+      line-height: 1.7;
+      flex: 1;
+    }
+    .module-card-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--blue-500);
+      margin-top: 1.5rem;
+      transition: var(--transition);
+    }
+    .module-card:hover .module-card-arrow { gap: 0.7rem; }
+    .module-card-arrow-icon {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(37,99,235,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      transition: var(--transition);
+    }
+    .module-card:hover .module-card-arrow-icon {
+      background: var(--blue-500);
+      color: var(--white);
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    .site-footer {
+      background: linear-gradient(180deg, var(--navy-900) 0%, var(--navy-950) 100%);
+      padding: 4rem 0 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-brand-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+    .footer-brand-name span {
+      background: linear-gradient(90deg, var(--sky-300), var(--cyan-400));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .footer-desc {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      max-width: 380px;
+    }
+    .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+    .footer-col-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1.25rem;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer-link {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .footer-link:hover { color: var(--sky-300); }
+    .footer-bottom {
+      padding-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 99px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .hero-content { grid-template-columns: 1fr; text-align: center; }
+      .hero-visual { order: -1; }
+      .floating-logo { height: 220px; }
+      .hero-actions { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .hero-subtitle { margin-left: auto; margin-right: auto; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-actions .btn-nav-admin { display: none; }
+      .nav-toggle { display: flex; }
+      .hero-title { font-size: 2.2rem; }
+      .section { padding: 3.5rem 0; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .modules-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Navigasi Utama">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="nav-brand" id="navBrand">
+        <img src="images.png" alt="Logo SMAN 1 Belitang" class="nav-brand-img" />
+        <div class="nav-brand-text">
+          <span class="nav-brand-name" style="font-size: 0.95rem;">SMA NEGERI 1 BELITANG</span>
+          <span class="nav-brand-sub">MPLS RAMAH 2026</span>
+        </div>
+      </a>
+
+      <div class="nav-links" role="menubar">
+        <a href="index.html"  class="nav-link" role="menuitem">🏠 Dashboard</a>
+        <a href="ketentuan.html" class="nav-link" role="menuitem">📖 Ketentuan Umum</a>
+        <a href="pelaksanaan.html" class="nav-link active" role="menuitem">🚀 Pelaksanaan Kegiatan</a>
+        <a href="fasilitas.html" class="nav-link" role="menuitem">🛠️ Fasilitas Siswa</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="nav-toggle" id="navToggle" aria-label="Buka menu mobile">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav" role="menu">
+      <a href="index.html"  class="nav-link" role="menuitem">🏠 Dashboard</a>
+      <a href="ketentuan.html" class="nav-link" role="menuitem">📖 Ketentuan Umum</a>
+      <a href="pelaksanaan.html" class="nav-link active" role="menuitem">🚀 Pelaksanaan Kegiatan</a>
+      <a href="fasilitas.html" class="nav-link" role="menuitem">🛠️ Fasilitas Siswa</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<header class="hero" role="banner">
+  <div class="hero-bg-slider">
+    <div class="hero-bg-slide active" style="background-image: url('FOTO/BEKRON/DSC00062.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00164.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00186.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00187.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00307 (1).JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00753.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00763.JPG')"></div>
+    <div class="hero-bg-overlay"></div>
+  </div>
+
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-grid"></div>
+
+  <div class="container">
+    <div class="hero-content">
+
+      <div>
+        <div class="hero-tag anim-slide-up delay-1">
+          <span class="tag-dot"></span>
+          BAB III & BAB IV Buku Panduan Digital
+        </div>
+
+        <h1 class="hero-title anim-slide-up delay-2">
+          Pelaksanaan<br>
+          <span class="gradient-text">Kegiatan</span>
+        </h1>
+
+        <p class="hero-subtitle anim-slide-up delay-3">
+          Pedoman teknis rangkaian kegiatan 5 Hari Masa Pengenalan Lingkungan Sekolah (MPLS) Ramah 2026 dan tahapan evaluasi Pasca MPLS.
+        </p>
+
+        <div class="hero-actions anim-slide-up delay-4">
+          <a href="#jadwal-mpls" class="btn-hero-primary">📅 Lihat Jadwal 5 Hari</a>
+          <a href="#pasca-mpls" class="btn-hero-outline">📈 Evaluasi Pasca MPLS</a>
+        </div>
+
+        <div class="hero-stats anim-slide-up delay-5">
+          <div class="hero-stat">
+            <span class="hero-stat-val">5</span>
+            <span class="hero-stat-lbl">Hari Pelaksanaan</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-val">300</span>
+            <span class="hero-stat-lbl">Menit / Hari</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-val">3</span>
+            <span class="hero-stat-lbl">Tahap Evaluasi</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-logo-wrap">
+          <div class="hero-logo-glow"></div>
+          <img
+            src="logo MPLS Ramah.png"
+            alt="Logo MPLS Ramah"
+            class="floating-logo anim-fade-in delay-3"
+          />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<!-- Wave divider -->
+<div class="wave-divider">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" preserveAspectRatio="none">
+    <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#f8fafc"/>
+  </svg>
+</div>
+
+
+
+<!-- ══════════════════════════════════════════════
+     JADWAL 5 HARI MPLS
+══════════════════════════════════════════════ -->
+<section id="jadwal-mpls" class="section section-alt" aria-labelledby="jadwalHeading">
+  <div class="container">
+    <div class="text-center section-head reveal">
+      <span class="section-eyebrow">📅 BAB III: Pelaksanaan MPLS Ramah</span>
+      <h2 class="section-title-lg" id="jadwalHeading">
+        Rangkaian <span class="accent">Kegiatan 5 Hari</span>
+      </h2>
+      <p class="section-subtitle-text">
+        Susunan acara utama dan pilihan (durasi 300 menit/hari) di SMA/SMK.
+      </p>
+    </div>
+
+    <div class="material-stack">
+      <!-- Hari 1 -->
+      <div class="material-card reveal reveal-delay-1">
+        <div class="material-card-header hdr-navy">
+          <div class="material-card-icon">1️⃣</div>
+          <div class="material-card-title">Hari Pertama</div>
+        </div>
+        <div class="material-card-body">
+          <ol style="margin-left: 1rem; line-height: 1.8; color: var(--gray-700);">
+            <li><strong>Salam Sapa Murid Baru:</strong> Menciptakan lingkungan inklusif.</li>
+            <li><strong>Upacara Bendera:</strong> (SEB No 9 Tahun 2026) (30 menit)</li>
+            <li><strong>Pengenalan Diri:</strong> Ice breaking & interaksi (15 menit)</li>
+            <li><strong>Wawasan Wiyata Mandala:</strong> Pengenalan visi, misi, dan budaya (40 menit)</li>
+            <li><strong>Aku dan Sekolahku & Aku dan Sekitarku:</strong> Pengenalan fasilitas sekolah (95 menit)</li>
+            <li><strong>Aku Anak Indonesia Hebat, Karakterku Kuat:</strong> G7KAIH (75 menit)</li>
+            <li><strong>Keadaban dan Keamanan Digital:</strong> (35 menit)</li>
+            <li><strong>Refleksi, Doa, dan Penutup:</strong> (10 menit)</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Hari 2 -->
+      <div class="material-card reveal reveal-delay-2">
+        <div class="material-card-header hdr-teal">
+          <div class="material-card-icon">2️⃣</div>
+          <div class="material-card-title">Hari Kedua</div>
+        </div>
+        <div class="material-card-body">
+          <ol style="margin-left: 1rem; line-height: 1.8; color: var(--gray-700);">
+            <li><strong>Salam Sapa Murid Baru</strong></li>
+            <li><strong>Pertemuan Pagi Ceria, Cek Denyut Jantung, & Tes Fleksibilitas:</strong> (90 menit)</li>
+            <li><strong>Eksplorasi Diri:</strong> Menggali potensi yang ada (25 menit)</li>
+            <li><strong>Ruang Perjumpaan Murid Baru:</strong> (90 menit)</li>
+            <li><strong>Sahabat Hebat: Dengar, Peduli, Hargai:</strong> (85 menit)</li>
+            <li><strong>Refleksi, Doa, dan Penutup:</strong> (10 menit)</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Hari 3 -->
+      <div class="material-card reveal reveal-delay-3">
+        <div class="material-card-header hdr-blue">
+          <div class="material-card-icon">3️⃣</div>
+          <div class="material-card-title">Hari Ketiga</div>
+        </div>
+        <div class="material-card-body">
+          <ol style="margin-left: 1rem; line-height: 1.8; color: var(--gray-700);">
+            <li><strong>Salam Sapa Murid Baru</strong></li>
+            <li><strong>Identifikasi Awal:</strong> Kondisi Sosial-Emosional, Asesmen Literasi Numerasi, & Bakat Minat (115 menit)</li>
+            <li><strong>Membangun Kesiapsiagaan Bencana:</strong> (40 menit)</li>
+            <li><strong>Literasi Digital:</strong> (45 menit)</li>
+            <li><strong>Dampak Negatif Kecanduan Game Online:</strong> (35 menit)</li>
+            <li><strong>Pengenalan Ekstrakurikuler:</strong> (55 menit)</li>
+            <li><strong>Refleksi, Doa, dan Penutup:</strong> (10 menit)</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Hari 4 -->
+      <div class="material-card reveal reveal-delay-4">
+        <div class="material-card-header hdr-red">
+          <div class="material-card-icon">4️⃣</div>
+          <div class="material-card-title">Hari Keempat</div>
+        </div>
+        <div class="material-card-body">
+          <ol style="margin-left: 1rem; line-height: 1.8; color: var(--gray-700);">
+            <li><strong>Salam Sapa Murid Baru</strong></li>
+            <li><strong>Pengenalan 8 Dimensi Profil Lulusan & Profil Lulusan SMK:</strong> (30 menit)</li>
+            <li><strong>Pengenalan Kurikulum & Motivasi Belajar:</strong> (110 menit)</li>
+            <li><strong>Kegiatan Pilihan:</strong> Bahaya NAPZA & Fenomena Sosial Remaja (45 menit)</li>
+            <li><strong>Gerakan ASRI:</strong> Kerja bakti dan lingkungan bersih (105 menit)</li>
+            <li><strong>Refleksi, Doa, dan Penutup:</strong> (10 menit)</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Hari 5 -->
+      <div class="material-card reveal reveal-delay-5">
+        <div class="material-card-header" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">
+          <div class="material-card-icon">5️⃣</div>
+          <div class="material-card-title">Hari Kelima</div>
+        </div>
+        <div class="material-card-body">
+          <ol style="margin-left: 1rem; line-height: 1.8; color: var(--gray-700);">
+            <li><strong>Salam Sapa Murid Baru</strong></li>
+            <li><strong>Pertemuan Pagi Ceria:</strong> (30 menit)</li>
+            <li><strong>Kegiatan Pilihan:</strong> Budaya Kekhasan Sekolah / K3 SMK (30 menit)</li>
+            <li><strong>Unjuk Karya:</strong> Panggung bebas untuk bakat siswa (230 menit)</li>
+            <li><strong>Refleksi, Doa, dan Penutup:</strong> (10 menit)</li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     PASCA MPLS
+══════════════════════════════════════════════ -->
+<section id="pasca-mpls" class="section">
+  <div class="container">
+    <div class="text-center section-head reveal">
+      <span class="section-eyebrow">📈 BAB IV: Pasca MPLS Ramah</span>
+      <h2 class="section-title-lg">
+        Evaluasi & <span class="accent">Tindak Lanjut</span>
+      </h2>
+      <p class="section-subtitle-text">
+        Proses pemantauan dan evaluasi pasca pelaksanaan kegiatan.
+      </p>
+    </div>
+
+    <div class="modules-grid">
+      <div class="module-card reveal reveal-delay-1" style="cursor:default; padding-bottom:2.25rem;">
+        <div class="module-card-stripe stripe-blue"></div>
+        <div class="module-icon-wrap icon-bg-blue">📝</div>
+        <div class="module-card-title">Evaluasi Pelaksanaan</div>
+        <div class="module-card-desc" style="margin-top: 1rem;">
+          <ul style="margin-left:1.2rem; color:var(--gray-600); line-height:1.7;">
+            <li>Evaluasi oleh sekolah ke Orang Tua/Wali (Maks. 30 hari)</li>
+            <li>Evaluasi ke Dinas Pendidikan/Kementerian (Maks. 30 hari)</li>
+            <li>Pengisian instrumen evaluasi daring Kepala Sekolah & Murid (30-45 sampel) di sistem nasional.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module-card reveal reveal-delay-2" style="cursor:default; padding-bottom:2.25rem;">
+        <div class="module-card-stripe stripe-teal"></div>
+        <div class="module-icon-wrap icon-bg-teal">📊</div>
+        <div class="module-card-title">Laporan Hasil Tes</div>
+        <div class="module-card-desc" style="margin-top: 1rem;">
+          <ul style="margin-left:1.2rem; color:var(--gray-600); line-height:1.7;">
+            <li>Hasil tersedia mulai 31 Juli 2026.</li>
+            <li>Tabel hasil literasi, numerasi, bakat minat, IMT, dan Fleksibilitas (Set 1).</li>
+            <li>Identifikasi kondisi sosial-emosional bersifat rahasia untuk BK (Set 2).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module-card reveal reveal-delay-3" style="cursor:default; padding-bottom:2.25rem;">
+        <div class="module-card-stripe stripe-indigo"></div>
+        <div class="module-icon-wrap icon-bg-indigo">🤝</div>
+        <div class="module-card-title">Skrining Khusus</div>
+        <div class="module-card-desc" style="margin-top: 1rem;">
+          <ul style="margin-left:1.2rem; color:var(--gray-600); line-height:1.7;">
+            <li>Identifikasi kondisi disabilitas / kebutuhan khusus (CIBI, lamban belajar).</li>
+            <li>Bukan diagnosis medis, melainkan dasar layanan & penyesuaian pembelajaran.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+
+      <div>
+        <div class="footer-brand-name">SMAN 1 <span>BELITANG</span></div>
+        <p class="footer-desc">
+          Rujukan Kegiatan Masa Pengenalan Lingkungan Sekolah (MPLS) Ramah 2026. Menghadirkan pengalaman belajar yang bermakna, aman, dan menyenangkan.
+        </p>
+        <span class="footer-copy">© 2026 SMAN 1 BELITANG. All rights reserved.</span>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Daftar Isi</div>
+        <div class="footer-links">
+          <a href="index.html" class="footer-link">🏠 Dashboard Utama</a>
+          <a href="ketentuan.html" class="footer-link">📖 Ketentuan Umum</a>
+          <a href="pelaksanaan.html" class="footer-link">🚀 Pelaksanaan Kegiatan</a>
+          <a href="fasilitas.html" class="footer-link">🛠️ Fasilitas Siswa</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Informasi</div>
+        <div class="footer-links">
+          <a href="https://cerdasberkarakter.kemendikdasmen.go.id/mplsramah/" target="_blank" rel="noopener" class="footer-link">📖 MPLS Ramah Nasional</a>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <div class="footer-col-title">Kontak Sekolah</div>
+          <p style="font-size:0.85rem;color:rgba(255,255,255,0.55);line-height:1.8;">
+            SMAN 1 BELITANG<br>
+            Kab. OKU Timur, Sumatera Selatan<br>
+            📧 info@sman1belitang.sch.id
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-badge">🎓 MPLS Ramah 2026</span>
+      <span class="footer-badge">💙 Humanis · Inklusif · Bermakna</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  /* ── Mobile nav toggle ── */
+  const toggle    = document.getElementById('navToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  toggle.addEventListener('click', () => {
+    toggle.classList.toggle('open');
+    mobileNav.classList.toggle('open');
+  });
+
+  /* ── Navbar background on scroll ── */
+  const navbar = document.querySelector('.navbar');
+  window.addEventListener('scroll', () => {
+    navbar.style.background = window.scrollY > 40
+      ? 'rgba(6,14,43,0.95)'
+      : 'rgba(6,14,43,0.72)';
+  }, { passive: true });
+
+  /* ── Scroll-reveal ── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer  = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

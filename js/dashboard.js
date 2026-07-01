@@ -1,0 +1,283 @@
+// ============================================================
+// SAPA Smansabel – Dashboard JavaScript
+// Data rendering, tables, charts, tabs
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // ── Guard ──────────────────────────────────────────────────
+  if (typeof guardDashboard === 'function') {
+    if (!guardDashboard()) return;
+  } else {
+    if (!sessionStorage.getItem('sapa_admin_session')) {
+      window.location.href = 'admin.html';
+      return;
+    }
+  }
+
+  // ── Set user info ──────────────────────────────────────────
+  const userName = sessionStorage.getItem('sapa_admin_session') || 'Admin';
+  document.querySelectorAll('[data-admin-name]').forEach(el => el.textContent = userName);
+
+  // ── Load Data ──────────────────────────────────────────────
+  let muridData = JSON.parse(localStorage.getItem('sapa_murid') || '[]');
+  let ckgData   = JSON.parse(localStorage.getItem('sapa_ckg')   || '[]');
+
+  // ── Seed demo data if empty ────────────────────────────────
+  if (muridData.length === 0) {
+    muridData = getDemoMurid();
+    localStorage.setItem('sapa_murid', JSON.stringify(muridData));
+  }
+  if (ckgData.length === 0) {
+    ckgData = getDemoCKG();
+    localStorage.setItem('sapa_ckg', JSON.stringify(ckgData));
+  }
+
+  // ── Statistics ─────────────────────────────────────────────
+  const totalMurid   = muridData.length;
+  const sudahCKG     = ckgData.length;
+  const belumCKG     = Math.max(0, totalMurid - sudahCKG);
+  const butuhABK     = muridData.filter(m => m.abk && m.abk !== 'non-abk').length;
+  const butuhPendamp = muridData.filter(m => m.pendampingan === 'Ya').length;
+
+  setCount('statTotal',   totalMurid);
+  setCount('statCKG',     sudahCKG);
+  setCount('statBelumCKG',belumCKG);
+  setCount('statABK',     butuhABK);
+
+  // ── Date / Time ────────────────────────────────────────────
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.querySelectorAll('[data-date]').forEach(el => el.textContent = dateStr);
+
+  // ── Murid Table ────────────────────────────────────────────
+  const muridTbody = document.getElementById('muridTbody');
+  const muridSearch = document.getElementById('muridSearch');
+
+  function renderMuridTable(data) {
+    if (!muridTbody) return;
+    if (data.length === 0) {
+      muridTbody.innerHTML = `
+        <tr class="empty-row">
+          <td colspan="7">
+            <div style="text-align:center; padding: 3rem 0; color: var(--gray-400);">
+              <div style="font-size:3rem; margin-bottom:1rem;">📭</div>
+              <div style="font-weight:600; font-size:1rem; color:var(--gray-600);">Belum ada data murid</div>
+              <div style="font-size:0.875rem; margin-top:0.5rem;">Data akan muncul setelah murid mengisi Formulir Deteksi Dini</div>
+            </div>
+          </td>
+        </tr>`;
+      return;
+    }
+    muridTbody.innerHTML = data.map((m, idx) => {
+      const ckg = ckgData.find(c => c.nisn === m.nisn);
+      const ckgStatus = ckg
+        ? `<span class="badge badge-normal">✅ Terdaftar</span>`
+        : `<span class="badge badge-kurang">⏳ Belum</span>`;
+      const abkStatus = m.abk === 'non-abk' || !m.abk
+        ? `<span class="badge" style="background:var(--gray-100);color:var(--gray-600);">—</span>`
+        : `<span class="badge badge-lebih">⚡ ${m.abk}</span>`;
+      return `
+        <tr>
+          <td>${idx + 1}</td>
+          <td>
+            <div style="font-weight:600;color:var(--gray-900);">${m.nama || '—'}</div>
+            <div style="font-size:0.8rem;color:var(--gray-500);">${m.nisn || '—'}</div>
+          </td>
+          <td>${m.kelas || '—'}</td>
+          <td><span class="badge badge-blue">${m.karakter || '—'}</span></td>
+          <td>${ckgStatus}</td>
+          <td>${abkStatus}</td>
+          <td>
+            <button onclick="viewMurid(${m.id})"
+              style="background:var(--blue-50);border:none;color:var(--blue-700);padding:0.35rem 0.75rem;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600;">
+              👁 Detail
+            </button>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  renderMuridTable(muridData);
+
+  if (muridSearch) {
+    muridSearch.addEventListener('input', () => {
+      const q = muridSearch.value.toLowerCase();
+      const filtered = muridData.filter(m =>
+        (m.nama  || '').toLowerCase().includes(q) ||
+        (m.nisn  || '').toLowerCase().includes(q) ||
+        (m.kelas || '').toLowerCase().includes(q)
+      );
+      renderMuridTable(filtered);
+    });
+  }
+
+  // ── CKG Table ──────────────────────────────────────────────
+  const ckgTbody  = document.getElementById('ckgTbody');
+  const ckgSearch = document.getElementById('ckgSearch');
+
+  function renderCKGTable(data) {
+    if (!ckgTbody) return;
+    if (data.length === 0) {
+      ckgTbody.innerHTML = `
+        <tr class="empty-row">
+          <td colspan="5">
+            <div style="text-align:center; padding: 3rem 0; color: var(--gray-400);">
+              <div style="font-size:3rem; margin-bottom:1rem;">🏥</div>
+              <div style="font-weight:600; font-size:1rem; color:var(--gray-600);">Belum ada pendaftaran CKG</div>
+            </div>
+          </td>
+        </tr>`;
+      return;
+    }
+    ckgTbody.innerHTML = data.map((c, idx) => `
+      <tr>
+        <td>${idx + 1}</td>
+        <td><div style="font-weight:600;color:var(--gray-900);">${c.nama || '—'}</div></td>
+        <td>${c.nisn || '—'}</td>
+        <td>${c.kelas || '—'}</td>
+        <td>${c.nohp || '—'}</td>
+        <td>${c.waktu || '—'}</td>
+      </tr>`).join('');
+  }
+
+  renderCKGTable(ckgData);
+
+  if (ckgSearch) {
+    ckgSearch.addEventListener('input', () => {
+      const q = ckgSearch.value.toLowerCase();
+      renderCKGTable(ckgData.filter(c =>
+        (c.nama || '').toLowerCase().includes(q) ||
+        (c.nisn || '').toLowerCase().includes(q)
+      ));
+    });
+  }
+
+  // ── Tabs ────────────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(target)?.classList.add('active');
+    });
+  });
+
+  // ── Sidebar nav ────────────────────────────────────────────
+  document.querySelectorAll('.sidebar-nav-item[data-tab-trigger]').forEach(item => {
+    item.addEventListener('click', () => {
+      const tabId = item.dataset.tabTrigger;
+      document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      const tabBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+      const tabPanel = document.getElementById(tabId);
+      if (tabBtn) tabBtn.classList.add('active');
+      if (tabPanel) tabPanel.classList.add('active');
+      // scroll top
+      document.querySelector('.dashboard-content')?.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // ── Helper functions ────────────────────────────────────────
+  function setCount(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let current = 0;
+    const step = Math.max(1, Math.ceil(val / 30));
+    const t = setInterval(() => {
+      current += step;
+      if (current >= val) { current = val; clearInterval(t); }
+      el.textContent = current;
+    }, 40);
+  }
+
+  // ── View detail modal ───────────────────────────────────────
+  window.viewMurid = function (id) {
+    const m = muridData.find(m => m.id === id);
+    if (!m) return;
+    const overlay = document.getElementById('detailModalOverlay');
+    const content = document.getElementById('detailContent');
+    if (!overlay || !content) return;
+
+    const fields = [
+      ['Nama Lengkap', m.nama],
+      ['NISN', m.nisn],
+      ['Kelas', m.kelas],
+      ['Tempat / Tgl Lahir', `${m.ttl_tempat || '—'}, ${m.ttl_tanggal || '—'}`],
+      ['Agama', m.agama],
+      ['Suku/Etnis', m.suku],
+      ['Kondisi Ekonomi', m.ekonomi],
+      ['Pengasuh Utama', m.pengasuh],
+      ['Karakter', m.karakter],
+      ['Gaya Belajar', m.gayaBelajar],
+      ['Minat Belajar', m.minatBelajar],
+      ['Hambatan Belajar', m.hambatanBelajar],
+      ['Pendampingan Khusus', m.pendampingan],
+      ['Alergi', m.alergi || '—'],
+      ['Ciri Fisik Khusus', m.ciriFisik || '—'],
+      ['Status ABK', m.abk],
+      ['Waktu Pengisian', m.waktu],
+    ];
+    content.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        ${fields.map(([label, val]) => `
+          <div style="padding:0.75rem;background:var(--gray-50);border-radius:8px;">
+            <div style="font-size:0.75rem;font-weight:700;color:var(--gray-500);text-transform:uppercase;margin-bottom:0.25rem;">${label}</div>
+            <div style="font-size:0.9375rem;color:var(--gray-800);font-weight:500;">${val || '—'}</div>
+          </div>
+        `).join('')}
+      </div>`;
+    overlay.classList.remove('hidden');
+  };
+
+  const detailClose = document.getElementById('detailModalClose');
+  const detailOverlay = document.getElementById('detailModalOverlay');
+  if (detailClose) detailClose.addEventListener('click', () => detailOverlay.classList.add('hidden'));
+  if (detailOverlay) detailOverlay.addEventListener('click', e => {
+    if (e.target === detailOverlay) detailOverlay.classList.add('hidden');
+  });
+
+  // ── Mobile sidebar toggle ───────────────────────────────────
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebar = document.querySelector('.sidebar');
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  }
+
+  // ── Export CSV ──────────────────────────────────────────────
+  window.exportCSV = function () {
+    const headers = ['No','Nama','NISN','Kelas','Karakter','ABK','Pendampingan','Waktu'];
+    const rows = muridData.map((m, i) => [
+      i+1, m.nama||'', m.nisn||'', m.kelas||'', m.karakter||'', m.abk||'', m.pendampingan||'', m.waktu||''
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = 'data-murid-sapa.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ── Demo Data Seeds ─────────────────────────────────────────
+  function getDemoMurid() {
+    return [
+      { id:1, nama:'Aisyah Putri Ramadhani', nisn:'1234567890', kelas:'X-IPA 1', karakter:'Mudah Bergaul', agama:'Islam', suku:'Jawa', ekonomi:'Menengah', pengasuh:'Orang Tua Kandung', gayaBelajar:'Visual', minatBelajar:'Matematika & Sains', hambatanBelajar:'Mudah distraksi', pendampingan:'Tidak', alergi:'Tidak ada', ciriFisik:'—', abk:'non-abk', waktu:'01/07/2026, 08:00', ttl_tempat:'Bekasi', ttl_tanggal:'2010-03-15' },
+      { id:2, nama:'Budi Santoso', nisn:'1234567891', kelas:'X-IPA 2', karakter:'Cenderung Pendiam', agama:'Islam', suku:'Sunda', ekonomi:'Rendah', pengasuh:'Nenek/Kakek', gayaBelajar:'Kinestetik', minatBelajar:'Olahraga', hambatanBelajar:'Susah fokus lama', pendampingan:'Ya', alergi:'Debu', ciriFisik:'Kacamata', abk:'non-abk', waktu:'01/07/2026, 08:15', ttl_tempat:'Karawang', ttl_tanggal:'2010-06-22' },
+      { id:3, nama:'Citra Dewi Lestari', nisn:'1234567892', kelas:'X-IPS 1', karakter:'Suka Menolong', agama:'Kristen', suku:'Batak', ekonomi:'Menengah Atas', pengasuh:'Orang Tua Kandung', gayaBelajar:'Auditori', minatBelajar:'Seni & Musik', hambatanBelajar:'Tidak ada', pendampingan:'Tidak', alergi:'Tidak ada', ciriFisik:'—', abk:'non-abk', waktu:'01/07/2026, 08:30', ttl_tempat:'Jakarta', ttl_tanggal:'2010-09-05' },
+      { id:4, nama:'Dimas Arya Pratama', nisn:'1234567893', kelas:'X-IPS 2', karakter:'Mudah Bergaul', agama:'Islam', suku:'Betawi', ekonomi:'Menengah', pengasuh:'Orang Tua Kandung', gayaBelajar:'Visual', minatBelajar:'Teknologi & Komputer', hambatanBelajar:'Nilai matematika kurang', pendampingan:'Ya', alergi:'Seafood', ciriFisik:'—', abk:'tunggal', waktu:'01/07/2026, 09:00', ttl_tempat:'Bekasi', ttl_tanggal:'2010-11-18' },
+      { id:5, nama:'Elsa Maharani', nisn:'1234567894', kelas:'X-IPA 1', karakter:'Campuran', agama:'Islam', suku:'Minang', ekonomi:'Tinggi', pengasuh:'Orang Tua Kandung', gayaBelajar:'Membaca/Menulis', minatBelajar:'Bahasa & Sastra', hambatanBelajar:'Tidak ada', pendampingan:'Tidak', alergi:'Tidak ada', ciriFisik:'—', abk:'non-abk', waktu:'01/07/2026, 09:15', ttl_tempat:'Padang', ttl_tanggal:'2010-01-28' },
+    ];
+  }
+
+  function getDemoCKG() {
+    return [
+      { nama:'Aisyah Putri Ramadhani', nisn:'1234567890', kelas:'X-IPA 1', nohp:'081234567890', waktu:'01/07/2026, 08:05' },
+      { nama:'Citra Dewi Lestari',      nisn:'1234567892', kelas:'X-IPS 1', nohp:'081234567892', waktu:'01/07/2026, 08:35' },
+      { nama:'Elsa Maharani',           nisn:'1234567894', kelas:'X-IPA 1', nohp:'081234567894', waktu:'01/07/2026, 09:20' },
+    ];
+  }
+
+});

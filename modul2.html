@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cek Kesehatan Mandiri – SAPA SMAN 1 Belitang</title>
+  <meta name="description" content="Skrining Kesehatan Mandiri MPLS Ramah 2026." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--gray-50); }
+
+    /* ── HERO BANNER ── */
+    .ckg-hero {
+      position: relative;
+      padding: 120px 20px 120px;
+      text-align: center;
+      color: white;
+      border-radius: 0 0 30px 30px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .hero-bg-slider {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out, transform 4s ease-in-out;
+      transform: scale(1.05);
+    }
+    .hero-bg-slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .hero-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--grad-hero);
+    }
+    .ckg-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+      animation: rotateBg 20s linear infinite;
+      z-index: 0;
+    }
+    .ckg-hero-tag {
+      position: relative; z-index: 1;
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      color: #bfdbfe;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 0.35rem 1rem;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(8px);
+    }
+    .ckg-hero h1 {
+      position: relative; z-index: 1;
+      color: white;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin: 0 0 0.75rem;
+      line-height: 1.2;
+    }
+    .ckg-hero p {
+      position: relative; z-index: 1;
+      color: rgba(255,255,255,0.8);
+      font-size: 1rem;
+      max-width: 550px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── MAIN CARD ── */
+    .ckg-card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(30,58,138,0.12), 0 8px 20px rgba(0,0,0,0.06);
+      max-width: 780px;
+      margin: -3.5rem auto 3rem;
+      position: relative;
+      overflow: hidden;
+      animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── STEP PROGRESS ── */
+    .step-progress {
+      display: flex;
+      padding: 1.5rem 2rem 0;
+      gap: 0.5rem;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 1.25rem;
+    }
+    .step-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    .step-dot.active { background: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.2); }
+    .step-dot.done { background: #10b981; }
+    .step-line { flex: 1; height: 2px; background: #e2e8f0; border-radius: 1px; transition: background 0.3s; }
+    .step-line.done { background: #10b981; }
+    .step-label { font-size: 0.75rem; font-weight: 600; color: #94a3b8; margin-left: auto; }
+    .step-label span { color: #1d4ed8; }
+
+    /* ── FORM PANELS ── */
+    .form-panel {
+      display: none;
+      padding: 2rem;
+      animation: fadeIn 0.35s ease;
+    }
+    .form-panel.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(15px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ── SEGMENT HEADER ── */
+    .segment-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .segment-icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .segment-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 0.2rem;
+    }
+    .segment-header p { font-size: 0.8rem; color: #64748b; margin: 0; }
+
+    /* ── QUESTIONS ── */
+    .question-card {
+      background: #f8faff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s;
+    }
+    .question-card:last-child { margin-bottom: 0; }
+    .question-text {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: #334155;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .question-number {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 5px;
+      margin-right: 0.5rem;
+      text-transform: uppercase;
+    }
+    .option-row { display: flex; gap: 0.75rem; }
+    .option-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+      background: white;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748b;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .option-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: currentColor;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .option-btn:hover {
+      border-color: #93c5fd;
+      background: #eff6ff;
+      color: #1d4ed8;
+      transform: translateY(-1px);
+    }
+    .option-btn input { display: none; }
+    .option-btn:has(input:checked) {
+      border-color: #1d4ed8;
+      background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+      color: white;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 18px rgba(29,78,216,0.35);
+    }
+    .option-btn.yes:has(input:checked) {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      border-color: #dc2626;
+      box-shadow: 0 6px 18px rgba(220,38,38,0.35);
+    }
+    .option-btn.no:has(input:checked) {
+      background: linear-gradient(135deg, #059669, #10b981);
+      border-color: #059669;
+      box-shadow: 0 6px 18px rgba(5,150,105,0.35);
+    }
+    .option-emoji { display: block; font-size: 1.25rem; margin-bottom: 0.25rem; }
+
+    /* ── IDENTITY FORM ── */
+    .id-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width: 540px) { .id-form-grid { grid-template-columns: 1fr; } }
+    .field-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .field-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .field-input {
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      color: #1e293b;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      background: #f8faff;
+    }
+    .field-input:focus {
+      border-color: #1d4ed8;
+      box-shadow: 0 0 0 3px rgba(29,78,216,0.1);
+      background: white;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .panel-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      background: #f8faff;
+      border-top: 1px solid #e2e8f0;
+    }
+    .btn-nav-prev {
+      background: white;
+      border: 2px solid #e2e8f0;
+      color: #64748b;
+      padding: 0.65rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-nav-prev:hover { border-color: #94a3b8; color: #334155; background: #f1f5f9; }
+    .btn-nav-next {
+      background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+      border: none;
+      color: white;
+      padding: 0.65rem 2rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 14px rgba(29,78,216,0.3);
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-nav-next:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(29,78,216,0.4); }
+    .btn-submit {
+      background: linear-gradient(135deg, #059669, #10b981);
+      border: none;
+      color: white;
+      padding: 0.75rem 2.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 14px rgba(5,150,105,0.35);
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-submit:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 20px rgba(5,150,105,0.45); }
+
+    /* ── LOADING ── */
+    .ckg-loading-panel {
+      display: none;
+      padding: 4rem 2rem;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+    .pulse-ring {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e3a8a, #0ea5e9);
+      margin: 0 auto 1.5rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      animation: pulse 1.5s ease-in-out infinite;
+      box-shadow: 0 0 0 0 rgba(29,78,216,0.5);
+    }
+    @keyframes pulse {
+      0%  { box-shadow: 0 0 0 0 rgba(29,78,216,0.5); }
+      70% { box-shadow: 0 0 0 20px rgba(29,78,216,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(29,78,216,0); }
+    }
+    .loading-text { font-weight: 600; color: #334155; margin-bottom: 0.5rem; }
+    .loading-sub  { font-size: 0.85rem; color: #94a3b8; }
+
+    /* ── RESULT PANEL ── */
+    .result-panel {
+      display: none;
+      padding: 2rem;
+      animation: fadeIn 0.4s ease;
+    }
+    .result-status-card {
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-status-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.15);
+      border-radius: inherit;
+    }
+    .result-icon { font-size: 3.5rem; display: block; margin-bottom: 0.75rem; animation: bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes bounceIn {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .result-status-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+      color: white;
+    }
+    .result-status-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: white;
+      margin: 0.25rem 0 0;
+    }
+    .segment-results { display: grid; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .seg-result-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: #f8faff;
+      border-radius: 14px;
+      border: 1.5px solid #e2e8f0;
+      transition: all 0.2s;
+      animation: slideUp 0.3s ease both;
+    }
+    .seg-result-item:nth-child(1) { animation-delay: 0.1s; }
+    .seg-result-item:nth-child(2) { animation-delay: 0.2s; }
+    .seg-result-item:nth-child(3) { animation-delay: 0.3s; }
+    .seg-result-item:nth-child(4) { animation-delay: 0.4s; }
+    .seg-result-item.warn { background: #fff7ed; border-color: #fed7aa; }
+    .seg-result-item.ok   { background: #f0fdf4; border-color: #bbf7d0; }
+    .seg-badge { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .seg-badge.ok   { background: #dcfce7; }
+    .seg-badge.warn { background: #fed7aa; }
+    .seg-result-text { font-size: 0.875rem; color: #334155; line-height: 1.4; }
+    .seg-result-text strong { color: #1e293b; }
+
+    /* ── AI BOX ── */
+    .ai-box {
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      border: 1.5px solid #bfdbfe;
+    }
+    .ai-box-header {
+      background: linear-gradient(135deg, #1e3a8a, #0ea5e9);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .ai-box-header-icon {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .ai-box-header h4 { color: white; font-size: 0.95rem; font-weight: 700; margin: 0; }
+    .ai-box-header p  { color: rgba(255,255,255,0.7); font-size: 0.75rem; margin: 0; }
+    .ai-box-body { background: white; padding: 1.5rem; }
+    #aiLoading {
+      display: flex; align-items: center; gap: 1rem;
+      color: #64748b; font-size: 0.9rem;
+    }
+    .ai-spinner {
+      width: 20px; height: 20px;
+      border: 2.5px solid #e2e8f0;
+      border-top-color: #1d4ed8;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #aiResultText {
+      font-size: 0.92rem;
+      color: #334155;
+      line-height: 1.75;
+      display: none;
+    }
+
+    .btn-restart {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.9rem;
+      border-radius: 14px;
+      background: #f1f5f9;
+      border: 2px solid #e2e8f0;
+      color: #475569;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-restart:hover { background: #e2e8f0; color: #1e293b; }
+    @keyframes rotateBg { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  </style>
+
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" role="navigation" aria-label="Navigasi Utama">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="nav-brand" id="navBrand">
+        <img src="images.png" alt="Logo SMAN 1 Belitang" class="nav-brand-img" />
+        <div class="nav-brand-text">
+          <span class="nav-brand-name" style="font-size: 0.95rem;">SMA NEGERI 1 BELITANG</span>
+          <span class="nav-brand-sub">MPLS RAMAH 2026</span>
+        </div>
+      </a>
+      <div class="nav-links" role="menubar">
+        <a href="index.html"  class="nav-link" role="menuitem">🏠 Dashboard</a>
+        <a href="ketentuan.html" class="nav-link" role="menuitem">📖 Ketentuan Umum</a>
+        <a href="pelaksanaan.html" class="nav-link" role="menuitem">🚀 Pelaksanaan Kegiatan</a>
+        <a href="fasilitas.html" class="nav-link active" role="menuitem">🛠️ Fasilitas Siswa</a>
+      </div>
+      <div class="nav-actions">
+        <button class="nav-toggle" id="navToggle" aria-label="Buka menu mobile">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav" role="menu">
+      <a href="index.html"  class="nav-link" role="menuitem">🏠 Dashboard</a>
+      <a href="ketentuan.html" class="nav-link" role="menuitem">📖 Ketentuan Umum</a>
+      <a href="pelaksanaan.html" class="nav-link" role="menuitem">🚀 Pelaksanaan Kegiatan</a>
+      <a href="fasilitas.html" class="nav-link active" role="menuitem">🛠️ Fasilitas Siswa</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="ckg-hero">
+  <div class="hero-bg-slider">
+    <div class="hero-bg-slide active" style="background-image: url('FOTO/BEKRON/DSC00062.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00164.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00186.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00187.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00307 (1).JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00753.JPG')"></div>
+    <div class="hero-bg-slide" style="background-image: url('FOTO/BEKRON/DSC00763.JPG')"></div>
+    <div class="hero-bg-overlay"></div>
+  </div>
+  <span class="ckg-hero-tag">🎯 Modul 2 • UKS Smansabel</span>
+  <h1>Skrining Kesehatan Komprehensif</h1>
+</div>
+
+<!-- MAIN CARD -->
+<div class="container">
+<div class="ckg-card" id="ckgMainCard">
+
+  <!-- Progress Bar -->
+  <div class="step-progress" id="stepProgress">
+    <div class="step-dot active" id="dot0"></div>
+    <div class="step-line" id="line0"></div>
+    <div class="step-dot" id="dot1"></div>
+    <div class="step-line" id="line1"></div>
+    <div class="step-dot" id="dot2"></div>
+    <div class="step-line" id="line2"></div>
+    <div class="step-dot" id="dot3"></div>
+    <span class="step-label">Tahap <span id="stepNum">1</span>/4</span>
+  </div>
+
+  <!-- Panel 0: Identitas & Ukuran Tubuh -->
+  <div class="form-panel active" id="panel0">
+    <div class="segment-header">
+      <div class="segment-icon-wrap" style="background:#dbeafe;">👤</div>
+      <div>
+        <h3>Identitas & Ukuran Tubuh</h3>
+        <p>Isi data dirimu dan hasil pengukuran tubuh</p>
+      </div>
+    </div>
+    <div class="id-form-grid">
+      <div class="field-group">
+        <label class="field-label" for="ckgNama">Nama Lengkap *</label>
+        <input type="text" id="ckgNama" class="field-input" placeholder="Contoh: Budi Santoso" />
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="ckgKelas">Peleton *</label>
+        <select id="ckgKelas" class="field-input">
+          <option value="">-- Pilih Peleton --</option>
+          <option>Peleton 1</option>
+          <option>Peleton 2</option>
+          <option>Peleton 3</option>
+          <option>Peleton 4</option>
+          <option>Peleton 5</option>
+          <option>Peleton 6</option>
+          <option>Peleton 7</option>
+          <option>Peleton 8</option>
+          <option>Peleton 9</option>
+          <option>Peleton 10</option>
+          <option>Peleton 11</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="id-form-grid" style="margin-top: 1rem;">
+      <div class="field-group">
+        <label class="field-label" for="ckgTinggi">Tinggi Badan (cm) *</label>
+        <input type="number" id="ckgTinggi" class="field-input" placeholder="Contoh: 165" />
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="ckgBerat">Berat Badan (kg) *</label>
+        <input type="number" id="ckgBerat" class="field-input" placeholder="Contoh: 55" />
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="ckgPerut">Lingkar Perut (cm) *</label>
+        <input type="number" id="ckgPerut" class="field-input" placeholder="Contoh: 75" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 1: Riwayat Penyakit -->
+  <div class="form-panel" id="panel1">
+    <div class="segment-header">
+      <div class="segment-icon-wrap" style="background:#fee2e2;">🏥</div>
+      <div>
+        <h3>Riwayat Penyakit</h3>
+        <p>Informasi medis keluarga dan pribadi</p>
+      </div>
+    </div>
+    <div class="question-card">
+      <div class="question-text"><span class="question-number">No 1</span>Apakah <b>keluarga inti</b> (orang tua/saudara) memiliki riwayat diabetes, darah tinggi, penyakit jantung, stroke, atau kanker?</div>
+      <div class="option-row">
+        <label class="option-btn yes"><input type="radio" name="rwytKeluarga" value="Ya" /><span class="option-emoji">🩺</span>Ya, Ada</label>
+        <label class="option-btn no"><input type="radio" name="rwytKeluarga" value="Tidak" /><span class="option-emoji">✅</span>Tidak Ada</label>
+      </div>
+    </div>
+    <div class="question-card">
+      <div class="question-text"><span class="question-number">No 2</span>Apakah <b>Anda sendiri</b> pernah didiagnosis memiliki diabetes, darah tinggi, penyakit jantung, asma, atau kolesterol tinggi?</div>
+      <div class="option-row">
+        <label class="option-btn yes"><input type="radio" name="rwytPribadi" value="Ya" /><span class="option-emoji">💊</span>Ya, Pernah</label>
+        <label class="option-btn no"><input type="radio" name="rwytPribadi" value="Tidak" /><span class="option-emoji">💪</span>Tidak Pernah</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 2: Gaya Hidup & Pola Makan -->
+  <div class="form-panel" id="panel2">
+    <div class="segment-header">
+      <div class="segment-icon-wrap" style="background:#dcfce7;">🥗</div>
+      <div>
+        <h3>Gaya Hidup & Pola Makan</h3>
+        <p>Kebiasaan sehari-harimu</p>
+      </div>
+    </div>
+    
+    <div class="question-card">
+      <div class="question-text"><span class="question-number">No 1</span>Bagaimana status kebiasaan merokok Anda?</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+        <label class="option-btn yes"><input type="radio" name="merokok" value="Aktif" />Perokok Aktif</label>
+        <label class="option-btn yes"><input type="radio" name="merokok" value="Kadang" />Kadang-kadang</label>
+        <label class="option-btn"><input type="radio" name="merokok" value="Mantan" />Mantan Perokok</label>
+        <label class="option-btn no"><input type="radio" name="merokok" value="Tidak" />Tidak Pernah</label>
+      </div>
+    </div>
+
+    <div class="question-card">
+      <div class="question-text"><span class="question-number">No 2</span>Apakah Anda berolahraga fisik minimal 30 menit dalam sehari?</div>
+      <div class="option-row">
+        <label class="option-btn no"><input type="radio" name="olahraga" value="Ya" /><span class="option-emoji">🏃</span>Ya, Rutin</label>
+        <label class="option-btn yes"><input type="radio" name="olahraga" value="Tidak" /><span class="option-emoji">🛋️</span>Jarang / Tidak</label>
+      </div>
+    </div>
+
+    <div class="question-card">
+      <div class="question-text"><span class="question-number">No 3</span>Apakah Anda mengonsumsi sayur dan buah setiap hari?</div>
+      <div class="option-row">
+        <label class="option-btn no"><input type="radio" name="sayur" value="Ya" /><span class="option-emoji">🍎</span>Ya, Setiap Hari</label>
+        <label class="option-btn yes"><input type="radio" name="sayur" value="Tidak" /><span class="option-emoji">🍔</span>Tidak Menentu</label>
+      </div>
+    </div>
+
+    <div class="question-card">
+      <div class="question-text"><span class="question-number">No 4</span>Seberapa sering Anda mengonsumsi makanan manis, asin, atau berminyak/berlemak tinggi?</div>
+      <div class="option-row">
+        <label class="option-btn yes"><input type="radio" name="junkfood" value="Sering" /><span class="option-emoji">🍟</span>Sering</label>
+        <label class="option-btn"><input type="radio" name="junkfood" value="Jarang" /><span class="option-emoji">⚖️</span>Kadang-kadang</label>
+        <label class="option-btn no"><input type="radio" name="junkfood" value="Tidak" /><span class="option-emoji">🚫</span>Jarang Sekali</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 3: Analisis AI & Hasil -->
+  <div class="form-panel text-center" id="panel3">
+    <!-- Loading State -->
+    <div id="aiLoading" style="padding: 4rem 1rem;">
+      <div class="ai-pulse-wrap">
+        <div class="ai-pulse-ring"></div>
+        <div class="ai-pulse-core">✨</div>
+      </div>
+      <h3 style="margin-top:1.5rem; color:#1d4ed8;">AI Gemini Sedang Menganalisis...</h3>
+      <p style="color:#64748b; font-size:0.9rem;">Memproses data kesehatan, genetik, dan gaya hidup Anda.</p>
+    </div>
+
+    <!-- Result State -->
+    <div id="aiResult" style="display:none;">
+      
+      <!-- Safe Result -->
+      <div id="resSafe" style="display:none; padding: 2rem 0;">
+        <div style="font-size: 4rem; margin-bottom:1rem;">🎉</div>
+        <h2 style="color:#059669; font-weight:800; margin-bottom:1rem;">Gaya Hidup Anda Sangat Sehat!</h2>
+        <p style="color:#475569; font-size:1.05rem; max-width:500px; margin:0 auto 2rem; line-height:1.6;">Berdasarkan perhitungan BMI dan kebiasaan Anda, Anda berada di kategori <strong>Risiko Rendah</strong>. Pertahankan pola makan bergizi, olahraga rutin, dan gaya hidup sehat Anda!</p>
+        <div style="background:#ecfdf5; border: 1px solid #a7f3d0; border-radius:16px; padding:1.5rem; max-width:400px; margin:0 auto;">
+          <h4 style="color:#047857; margin-bottom:0.5rem;">Saran AI:</h4>
+          <ul style="text-align:left; color:#065f46; font-size:0.9rem; padding-left:1.2rem;">
+            <li>Jaga konsistensi olahraga minimal 30 menit sehari.</li>
+            <li>Pertahankan porsi buah & sayur harianmu.</li>
+            <li>Tetap hindari merokok dan batasi gula tambahan.</li>
+          </ul>
+        </div>
+        <button class="btn-restart" style="max-width:200px; margin: 2rem auto 0;" onclick="location.reload()">Mulai Ulang</button>
+      </div>
+
+      <!-- Warning Result (Ticket) -->
+      <div id="resWarning" style="display:none;">
+        <h2 style="color:#dc2626; font-weight:800; margin-bottom:0.5rem; font-size: 1.6rem;">Pemeriksaan Lanjutan Diperlukan</h2>
+        <p style="color:#64748b; font-size:0.95rem; margin-bottom: 2rem;">Berdasarkan skrining awal, Anda terdeteksi berisiko. Anda disarankan segera mengunjungi fasilitas kesehatan terdekat untuk pengecekan.</p>
+        
+        <div class="ticket-wrapper">
+          <div class="ticket-header">
+            <div class="ticket-title">TIKET PEMERIKSAAN UKS</div>
+            <div class="ticket-subtitle">Bawa tiket digital ini ke Ruang UKS SMAN 1 Belitang</div>
+          </div>
+          <div class="ticket-body">
+            <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
+              <div style="text-align:left;">
+                <div style="font-size:0.75rem; color:#64748b; text-transform:uppercase;">Nama Pasien</div>
+                <div style="font-weight:700; color:#1e293b;" id="ticketNama">Budi Santoso</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.75rem; color:#64748b; text-transform:uppercase;">Peleton</div>
+                <div style="font-weight:700; color:#1e293b;" id="ticketKelas">-</div>
+              </div>
+            </div>
+            
+            <div class="ticket-divider"></div>
+            
+            <div style="text-align:left; margin-bottom:1.5rem;">
+              <div style="font-size:0.8rem; font-weight:700; color:#b91c1c; margin-bottom:0.5rem;">Rekomendasi Pengecekan (Gratis):</div>
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <span class="badge-cek">Cek Darah (Gula/Kolesterol)</span>
+                <span class="badge-cek">Tensi Darah</span>
+                <span class="badge-cek">Konsultasi Gizi Khusus</span>
+              </div>
+            </div>
+
+            <div class="barcode-area">
+              <div class="barcode-lines"></div>
+              <div class="barcode-number">UKS-2026-<span id="ticketRandom">89412</span></div>
+            </div>
+          </div>
+        </div>
+        <button class="btn-restart" style="max-width:200px; margin: 2rem auto 0;" onclick="location.reload()">Ulangi Skrining</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="panel-nav">
+    <button class="btn-nav-prev" id="btnPrev" style="display: none;">Kembali</button>
+    <button class="btn-nav-next" id="btnNext">Selanjutnya</button>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer" role="contentinfo" style="margin-top:4rem;">
+  <div class="container">
+    <div class="footer-grid" style="grid-template-columns: 1fr; text-align: center;">
+      <div>
+        <div class="footer-brand-name">SMAN 1 <span>BELITANG</span></div>
+        <p class="footer-desc" style="margin: 0 auto 1rem; max-width: 600px;">
+          Modul Kesehatan - Skrining Dini UKS. Data Anda dijamin kerahasiaannya.
+        </p>
+        <span class="footer-copy">&copy; 2026 SMAN 1 BELITANG. All rights reserved.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* Extra CSS for Ticket & AI animation */
+  .ai-pulse-wrap {
+    position: relative;
+    width: 80px; height: 80px;
+    margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ai-pulse-core {
+    font-size: 2rem;
+    position: relative;
+    z-index: 2;
+  }
+  .ai-pulse-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #bfdbfe;
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  @keyframes ping {
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  .ticket-wrapper {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    max-width: 450px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+  }
+  .ticket-wrapper::before, .ticket-wrapper::after {
+    content:'';
+    position:absolute;
+    top: 90px;
+    width: 30px; height: 30px;
+    background: #f8faff;
+    border-radius: 50%;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+  }
+  .ticket-wrapper::before { left: -15px; }
+  .ticket-wrapper::after { right: -15px; }
+  
+  .ticket-header {
+    background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+    padding: 1.5rem;
+    color: white;
+  }
+  .ticket-title { font-weight: 900; font-size: 1.25rem; letter-spacing: 1px; }
+  .ticket-subtitle { font-size: 0.8rem; color: #bfdbfe; margin-top: 0.25rem; }
+  
+  .ticket-body { padding: 2rem 1.5rem; background: #fff; }
+  
+  .ticket-divider {
+    height: 0;
+    border-top: 2px dashed #cbd5e1;
+    margin: 1rem -1.5rem 1.5rem;
+  }
+  
+  .badge-cek {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .barcode-area { margin-top: 2rem; text-align: center; }
+  .barcode-lines {
+    height: 50px;
+    background: repeating-linear-gradient(
+      90deg,
+      #1e293b,
+      #1e293b 3px,
+      transparent 3px,
+      transparent 6px,
+      #1e293b 6px,
+      #1e293b 10px,
+      transparent 10px,
+      transparent 13px,
+      #1e293b 13px,
+      #1e293b 14px,
+      transparent 14px,
+      transparent 18px
+    );
+    margin-bottom: 0.5rem;
+  }
+  .barcode-number { font-family: 'Courier New', monospace; font-weight: 800; font-size: 1.1rem; letter-spacing: 0.2rem; color: #334155; }
+</style>
+
+<script>
+  // Mobile Nav Toggle
+  const navToggle = document.getElementById('navToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  if(navToggle) {
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+  }
+
+  /* ── Multi-step Form Logic ── */
+  let currentStep = 0;
+  const totalSteps = 4;
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const stepNum = document.getElementById('stepNum');
+
+  function updateUI() {
+    // Panels
+    for (let i = 0; i < totalSteps; i++) {
+      const panel = document.getElementById('panel' + i);
+      if (panel) {
+        if (i === currentStep) {
+          panel.classList.add('active');
+        } else {
+          panel.classList.remove('active');
+        }
+      }
+    }
+    // Progress Dots/Lines
+    for (let i = 0; i < totalSteps; i++) {
+      const dot = document.getElementById('dot' + i);
+      if (dot) {
+        if (i <= currentStep) dot.classList.add('active');
+        else dot.classList.remove('active');
+      }
+      if (i < totalSteps - 1) {
+        const line = document.getElementById('line' + i);
+        if (line) {
+          if (i < currentStep) line.classList.add('active');
+          else line.classList.remove('active');
+        }
+      }
+    }
+
+    if(stepNum) stepNum.innerText = currentStep + 1;
+
+    // Buttons
+    if(btnPrev) btnPrev.style.display = (currentStep === 0) ? 'none' : 'block';
+    
+    if (btnNext) {
+      if (currentStep === totalSteps - 1) {
+        btnNext.style.display = 'none'; // Hide next button on result step
+        if(btnPrev) btnPrev.style.display = 'none';
+        runAIAnalysis();
+      } else if (currentStep === totalSteps - 2) {
+        btnNext.innerText = 'Kirim & Analisis';
+        btnNext.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        btnNext.style.borderColor = '#059669';
+        btnNext.style.color = 'white';
+        btnNext.style.display = 'block';
+      } else {
+        btnNext.innerText = 'Selanjutnya';
+        btnNext.style.background = '';
+        btnNext.style.borderColor = '';
+        btnNext.style.color = '';
+        btnNext.style.display = 'block';
+      }
+    }
+  }
+
+  function validateStep() {
+    if(currentStep === 0) {
+      if(!document.getElementById('ckgNama').value || !document.getElementById('ckgKelas').value ||
+         !document.getElementById('ckgTinggi').value || !document.getElementById('ckgBerat').value || !document.getElementById('ckgPerut').value) {
+        alert("Harap lengkapi semua data identitas dan ukuran tubuh!");
+        return false;
+      }
+    } else if (currentStep === 1) {
+      if(!document.querySelector('input[name="rwytKeluarga"]:checked') || !document.querySelector('input[name="rwytPribadi"]:checked')) {
+         alert("Harap jawab semua pertanyaan di tahap ini!");
+         return false;
+      }
+    } else if (currentStep === 2) {
+      if(!document.querySelector('input[name="merokok"]:checked') || 
+         !document.querySelector('input[name="olahraga"]:checked') ||
+         !document.querySelector('input[name="sayur"]:checked') ||
+         !document.querySelector('input[name="junkfood"]:checked')) {
+         alert("Harap jawab semua pertanyaan di tahap ini!");
+         return false;
+      }
+    }
+    return true;
+  }
+
+  if(btnNext) {
+    btnNext.addEventListener('click', () => {
+      if (!validateStep()) return;
+      if (currentStep < totalSteps - 1) {
+        currentStep++;
+        updateUI();
+      }
+    });
+  }
+
+  if(btnPrev) {
+    btnPrev.addEventListener('click', () => {
+      if (currentStep > 0) {
+        currentStep--;
+        updateUI();
+      }
+    });
+  }
+
+  // Calculate Risk and Show Result
+  function runAIAnalysis() {
+    document.getElementById('aiLoading').style.display = 'block';
+    document.getElementById('aiResult').style.display = 'none';
+
+    setTimeout(() => {
+      document.getElementById('aiLoading').style.display = 'none';
+      document.getElementById('aiResult').style.display = 'block';
+      
+      let isHighRisk = false;
+
+      // Check BMI
+      const t = parseFloat(document.getElementById('ckgTinggi').value) / 100;
+      const b = parseFloat(document.getElementById('ckgBerat').value);
+      if(t > 0 && b > 0) {
+        const bmi = b / (t * t);
+        if(bmi > 25) isHighRisk = true; // Overweight or Obese
+      }
+
+      // Check Waist
+      const p = parseFloat(document.getElementById('ckgPerut').value);
+      if (p > 90) isHighRisk = true; // Simplified threshold
+
+      // Check Questionnaires
+      const rwKeluarga = document.querySelector('input[name="rwytKeluarga"]:checked');
+      if (rwKeluarga && rwKeluarga.value === 'Ya') isHighRisk = true;
+      
+      const rwPribadi = document.querySelector('input[name="rwytPribadi"]:checked');
+      if (rwPribadi && rwPribadi.value === 'Ya') isHighRisk = true;
+      
+      const merokok = document.querySelector('input[name="merokok"]:checked');
+      if (merokok && (merokok.value === 'Aktif' || merokok.value === 'Kadang')) isHighRisk = true;
+      
+      const olahraga = document.querySelector('input[name="olahraga"]:checked');
+      if (olahraga && olahraga.value === 'Tidak') isHighRisk = true;
+      
+      const junkfood = document.querySelector('input[name="junkfood"]:checked');
+      if (junkfood && (junkfood.value === 'Sering' || junkfood.value === 'Jarang')) {
+         if (junkfood.value === 'Sering') isHighRisk = true;
+      }
+
+      if (isHighRisk) {
+        // Populate Ticket
+        document.getElementById('ticketNama').innerText = document.getElementById('ckgNama').value || 'Siswa';
+        document.getElementById('ticketKelas').innerText = document.getElementById('ckgKelas').value || '-';
+        document.getElementById('ticketRandom').innerText = Math.floor(10000 + Math.random() * 90000);
+        document.getElementById('resWarning').style.display = 'block';
+        document.getElementById('resSafe').style.display = 'none';
+      } else {
+        document.getElementById('resSafe').style.display = 'block';
+        document.getElementById('resWarning').style.display = 'none';
+      }
+    }, 2500); // 2.5 seconds loading simulation
+  }
+
+  // Init
+  updateUI();
+
+  /* ── Auto-swap Hero Background ── */
+  const heroSlides = document.querySelectorAll('.hero-bg-slide');
+  if (heroSlides.length > 0) {
+    let currentHero = 0;
+    setInterval(() => {
+      heroSlides[currentHero].classList.remove('active');
+      currentHero = (currentHero + 1) % heroSlides.length;
+      heroSlides[currentHero].classList.add('active');
+    }, 5000);
+  }
+</script>
+</body>
+</html>

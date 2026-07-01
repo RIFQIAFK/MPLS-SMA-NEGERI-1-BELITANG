@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin – SAPA Smansabel</title>
+  <meta name="description" content="Dashboard administrasi SAPA Smansabel MPLS Ramah 2026." />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Extra dashboard-specific styles */
+    body { background: var(--gray-100); }
+
+    .chart-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+    }
+    .chart-bar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .chart-bar-label {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      width: 160px;
+      flex-shrink: 0;
+    }
+    .chart-bar-track {
+      flex: 1;
+      height: 28px;
+      background: var(--gray-100);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .chart-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      padding-left: var(--space-3);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--white);
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 2.5rem;
+    }
+    .chart-bar-val {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      width: 40px;
+      text-align: right;
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .activity-text { flex: 1; font-size: 0.9rem; color: var(--gray-700); }
+    .activity-time { font-size: 0.8125rem; color: var(--gray-400); }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .dash-card { animation: fadeUp 0.4s ease both; }
+    .stat-card { animation: fadeUp 0.3s ease both; }
+    .stat-card:nth-child(2) { animation-delay: 0.08s; }
+    .stat-card:nth-child(3) { animation-delay: 0.16s; }
+    .stat-card:nth-child(4) { animation-delay: 0.24s; }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 499;
+    }
+    .sidebar-overlay.visible { display: block; }
+
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+  <!-- ══════════════════════════════
+       SIDEBAR
+  ══════════════════════════════ -->
+  <aside class="sidebar" role="navigation" aria-label="Navigasi Sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-icon">S</div>
+        <div>
+          <div class="sidebar-name">SAPA Smansabel</div>
+          <div class="sidebar-sub">Admin Panel</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-nav-label">Menu Utama</div>
+      <a class="sidebar-nav-item active" data-tab-trigger="tabOverview" href="#" aria-current="page">
+        <span class="nav-icon">📊</span> Overview
+      </a>
+      <a class="sidebar-nav-item" data-tab-trigger="tabMurid" href="#">
+        <span class="nav-icon">👥</span> Data Murid
+      </a>
+      <a class="sidebar-nav-item" data-tab-trigger="tabCKG" href="#">
+        <span class="nav-icon">🏥</span> Data CKG
+      </a>
+
+      <div class="sidebar-nav-label" style="margin-top:var(--space-4);">Lainnya</div>
+      <a class="sidebar-nav-item" href="index.html" target="_blank">
+        <span class="nav-icon">🌐</span> Lihat Website
+      </a>
+      <a class="sidebar-nav-item" href="#" data-logout id="sidebarLogout">
+        <span class="nav-icon">🚪</span> Logout
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">A</div>
+        <div>
+          <div class="sidebar-user-name" data-admin-name>Admin</div>
+          <div class="sidebar-user-role">Administrator</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sidebar mobile overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ══════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════ -->
+  <main class="dashboard-main" role="main">
+
+    <!-- Topbar -->
+    <div class="dashboard-topbar">
+      <div style="display:flex;align-items:center;gap:var(--space-4);">
+        <button id="sidebarToggle" class="nav-toggle" style="display:flex;" aria-label="Toggle sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-title" id="topbarTitle">📊 Overview Dashboard</div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" data-date></div>
+        <a href="index.html" target="_blank" class="btn btn-secondary btn-sm">🌐 Lihat Web</a>
+        <button class="btn btn-sm" style="background:var(--red-50);color:var(--red-500);border:1px solid #ffcdd2;" data-logout id="topbarLogout">
+          🚪 Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+
+      <!-- ── Tabs Navigation ── -->
+      <div class="tabs" role="tablist" aria-label="Tab navigasi dashboard">
+        <button class="tab-btn active" data-tab="tabOverview" role="tab" aria-selected="true">📊 Overview</button>
+        <button class="tab-btn" data-tab="tabMurid"   role="tab" aria-selected="false">👥 Data Murid</button>
+        <button class="tab-btn" data-tab="tabCKG"     role="tab" aria-selected="false">🏥 Data CKG</button>
+      </div>
+
+      <!-- ══════════════════════════════
+           TAB: OVERVIEW
+      ══════════════════════════════ -->
+      <div class="tab-panel active" id="tabOverview" role="tabpanel" aria-label="Tab Overview">
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">👥</div>
+            <div>
+              <div class="stat-label">Total Murid Terdata</div>
+              <div class="stat-value" id="statTotal">0</div>
+              <div class="stat-change">📋 Profil lengkap</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">✅</div>
+            <div>
+              <div class="stat-label">Terdaftar CKG</div>
+              <div class="stat-value" id="statCKG">0</div>
+              <div class="stat-change" style="color:var(--green-500);">✅ Via UKS SMANSA</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange">⏳</div>
+            <div>
+              <div class="stat-label">Belum Daftar CKG</div>
+              <div class="stat-value" id="statBelumCKG">0</div>
+              <div class="stat-change" style="color:var(--orange-500);">⚠ Perlu tindakan</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon red">♿</div>
+            <div>
+              <div class="stat-label">Murid ABK</div>
+              <div class="stat-value" id="statABK">0</div>
+              <div class="stat-change" style="color:var(--blue-600);">Butuh pendampingan</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row: Charts + Recent Activity -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);">
+
+          <!-- Karakter Distribution -->
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <div class="dash-card-title">😊 Distribusi Karakter Murid</div>
+            </div>
+            <div class="dash-card-body">
+              <div class="chart-bar-wrap" id="chartKarakter">
+                <div style="color:var(--gray-400);text-align:center;padding:2rem 0;font-size:0.9rem;">Memuat data…</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <div class="dash-card-title">🕒 Aktivitas Terbaru</div>
+            </div>
+            <div class="dash-card-body">
+              <div class="activity-list" id="activityList">
+                <div style="color:var(--gray-400);text-align:center;padding:2rem 0;font-size:0.9rem;">Memuat data…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Info -->
+        <div class="dash-card" style="margin-top:0;">
+          <div class="dash-card-header">
+            <div class="dash-card-title">📌 Informasi Program</div>
+          </div>
+          <div class="dash-card-body">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5);">
+              <div style="text-align:center;padding:var(--space-5);background:var(--blue-50);border-radius:var(--radius-md);">
+                <div style="font-size:2.5rem;margin-bottom:var(--space-3);">📅</div>
+                <div style="font-weight:700;color:var(--blue-800);margin-bottom:var(--space-2);">MPLS Ramah 2026</div>
+                <div style="font-size:0.875rem;color:var(--blue-600);">Tahun Ajaran 2026/2027</div>
+              </div>
+              <div style="text-align:center;padding:var(--space-5);background:var(--green-50);border-radius:var(--radius-md);">
+                <div style="font-size:2.5rem;margin-bottom:var(--space-3);">🏫</div>
+                <div style="font-weight:700;color:var(--green-600);margin-bottom:var(--space-2);">SMAN 1 BELITANG</div>
+                <div style="font-size:0.875rem;color:var(--green-500);">Kab. Bekasi, Jawa Barat</div>
+              </div>
+              <div style="text-align:center;padding:var(--space-5);background:var(--orange-50);border-radius:var(--radius-md);">
+                <div style="font-size:2.5rem;margin-bottom:var(--space-3);">🏥</div>
+                <div style="font-weight:700;color:var(--orange-500);margin-bottom:var(--space-2);">Program CKG</div>
+                <div style="font-size:0.875rem;color:var(--orange-500);">Cek Kesehatan Gratis</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- #tabOverview -->
+
+      <!-- ══════════════════════════════
+           TAB: DATA MURID
+      ══════════════════════════════ -->
+      <div class="tab-panel" id="tabMurid" role="tabpanel" aria-label="Tab Data Murid">
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">👥 Data Murid – Hasil Formulir Deteksi Dini</div>
+            <button class="btn btn-primary btn-sm" onclick="exportCSV()" id="exportBtn">📥 Export CSV</button>
+          </div>
+          <div class="dash-card-body">
+            <div class="table-search">
+              <div class="search-box">
+                <input type="text" id="muridSearch" class="form-control" placeholder="🔍 Cari nama, NISN, peleton..." aria-label="Cari murid" />
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="data-table" role="table" aria-label="Tabel data murid">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nama / NISN</th>
+                    <th scope="col">Peleton</th>
+                    <th scope="col" class="text-center">Tes BB</th>
+                    <th scope="col">Karakter</th>
+                    <th scope="col">Status CKG</th>
+                    <th scope="col">Status ABK</th>
+                    <th scope="col">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="muridTbody">
+                  <tr>
+                    <td colspan="7" style="text-align:center;padding:3rem;color:var(--gray-400);">
+                      <div style="animation:spin 1s linear infinite;display:inline-block;width:30px;height:30px;border:3px solid var(--blue-100);border-top-color:var(--blue-500);border-radius:50%;"></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════
+           TAB: DATA CKG
+      ══════════════════════════════ -->
+      <div class="tab-panel" id="tabCKG" role="tabpanel" aria-label="Tab Data CKG">
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">🏥 Data Pendaftaran Cek Kesehatan Gratis (CKG)</div>
+          </div>
+          <div class="dash-card-body">
+            <div class="table-search">
+              <div class="table-search-input">
+                <input type="text" id="ckgSearch" class="form-control" placeholder="🔍 Cari nama atau NISN..." aria-label="Cari pendaftar CKG" />
+              </div>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="data-table" role="table" aria-label="Tabel data CKG">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nama Murid</th>
+                    <th scope="col">NISN</th>
+                    <th scope="col">Peleton</th>
+                    <th scope="col">No. HP Ortu</th>
+                    <th scope="col">Waktu Daftar</th>
+                  </tr>
+                </thead>
+                <tbody id="ckgTbody">
+                  <tr>
+                    <td colspan="6" style="text-align:center;padding:3rem;color:var(--gray-400);">
+                      <div style="animation:spin 1s linear infinite;display:inline-block;width:30px;height:30px;border:3px solid var(--blue-100);border-top-color:var(--blue-500);border-radius:50%;"></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- .dashboard-content -->
+  </main>
+</div>
+
+<!-- ── Detail Modal ── -->
+<div id="detailModalOverlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Detail murid">
+  <div class="modal" style="max-width:700px;">
+    <div class="modal-header" style="background: var(--grad-primary);">
+      <div class="modal-title">👤 Detail Profil Murid</div>
+      <button class="modal-close" id="detailModalClose" aria-label="Tutup">×</button>
+    </div>
+    <div class="modal-body" id="detailContent" style="max-height:70vh;overflow-y:auto;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary btn-full" onclick="document.getElementById('detailModalOverlay').classList.add('hidden');">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+<script>
+  // ── Chart rendering (inline after data loads) ────────────
+  document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(() => {
+      const muridData = JSON.parse(localStorage.getItem('sapa_murid') || '[]');
+      renderKarakterChart(muridData);
+      renderActivityFeed(muridData);
+    }, 500);
+  });
+
+  function renderKarakterChart(data) {
+    const chartEl = document.getElementById('chartKarakter');
+    if (!chartEl) return;
+    const counts = {};
+    data.forEach(m => {
+      const k = m.karakter || 'Lainnya';
+      counts[k] = (counts[k] || 0) + 1;
+    });
+    const total = data.length || 1;
+    const colors = ['#1565C0','#00ACC1','#43A047','#FB8C00','#E53935'];
+    const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+    if (entries.length === 0) {
+      chartEl.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gray-400);">Belum ada data</div>';
+      return;
+    }
+    chartEl.innerHTML = entries.map(([label, val], i) => `
+      <div class="chart-bar-row">
+        <div class="chart-bar-label">${label}</div>
+        <div class="chart-bar-track">
+          <div class="chart-bar-fill" style="width:0%;background:${colors[i%colors.length]};" data-target="${Math.round(val/total*100)}">${val}</div>
+        </div>
+        <div class="chart-bar-val">${Math.round(val/total*100)}%</div>
+      </div>
+    `).join('');
+    // Animate bars
+    setTimeout(() => {
+      document.querySelectorAll('.chart-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.target + '%';
+      });
+    }, 100);
+  }
+
+  function renderActivityFeed(data) {
+    const actEl = document.getElementById('activityList');
+    if (!actEl) return;
+    const ckgData = JSON.parse(localStorage.getItem('sapa_ckg') || '[]');
+    const activities = [
+      ...data.map(m => ({ text: `<strong>${m.nama||'Murid'}</strong> mengisi Formulir Deteksi Dini`, time: m.waktu||'—', color: '#1565C0' })),
+      ...ckgData.map(c => ({ text: `<strong>${c.nama||'Murid'}</strong> mendaftar CKG`, time: c.waktu||'—', color: '#43A047' })),
+    ].slice(0, 8);
+
+    if (activities.length === 0) {
+      actEl.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--gray-400);">Belum ada aktivitas</div>';
+      return;
+    }
+    actEl.innerHTML = activities.map(a => `
+      <div class="activity-item">
+        <div class="activity-dot" style="background:${a.color};"></div>
+        <div class="activity-text">${a.text}</div>
+        <div class="activity-time">${a.time}</div>
+      </div>
+    `).join('');
+  }
+
+  // Sidebar mobile
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebar       = document.querySelector('.sidebar');
+  const sidebarOverlay= document.getElementById('sidebarOverlay');
+
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('visible');
+    });
+  }
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('visible');
+    });
+  }
+
+  // Tab title update
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const titles = {
+        tabOverview: '📊 Overview Dashboard',
+        tabMurid:    '👥 Data Murid',
+        tabCKG:      '🏥 Data CKG',
+      };
+      const topTitle = document.getElementById('topbarTitle');
+      if (topTitle) topTitle.textContent = titles[btn.dataset.tab] || 'Dashboard';
+    });
+  });
+</script>
+</body>
+</html>
