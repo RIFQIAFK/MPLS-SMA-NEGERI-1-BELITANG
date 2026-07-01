@@ -5,16 +5,6 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  // ── Mobile Nav Toggle ─────────────────────────────────────
-  const navToggle = document.getElementById('navToggle');
-  const mobileNav = document.getElementById('mobileNav');
-  if (navToggle && mobileNav) {
-    navToggle.addEventListener('click', () => {
-      mobileNav.classList.toggle('open');
-      navToggle.classList.toggle('open');
-    });
-  }
-
   // ── Smooth Scroll for anchor links ────────────────────────
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {

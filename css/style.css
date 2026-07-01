@@ -1594,6 +1594,10 @@ section:nth-child(even) { background: var(--gray-50); }
   .hero-actions { flex-direction: column; align-items: flex-start; }
   .nav-links { display: none; }
   .nav-toggle { display: flex; }
+  .nav-brand { gap: 0.5rem; max-width: 75%; }
+  .nav-brand-img { height: 32px; width: 32px; }
+  .nav-brand-name { font-size: 0.85rem; }
+  .nav-brand-sub { font-size: 0.6rem; }
   .modul-pill span { display: none; }
   .wizard-step-label { display: none; }
   .wizard-step { flex: 0 0 calc(50% - var(--space-2)); }
