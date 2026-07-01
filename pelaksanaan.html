@@ -930,10 +930,10 @@
       </a>
 
       <div class="nav-links" role="menubar">
-        <a href="index.html"  class="nav-link" role="menuitem">🏠 Dashboard</a>
+        <a href="index.html" class="nav-link" role="menuitem">🏠 Dashboard</a>
         <a href="ketentuan.html" class="nav-link" role="menuitem">📖 Ketentuan Umum</a>
         <a href="pelaksanaan.html" class="nav-link active" role="menuitem">🚀 Pelaksanaan Kegiatan</a>
-        <a href="fasilitas.html" class="nav-link" role="menuitem">🛠️ Fasilitas Siswa</a>
+        <a href="fasilitas.html" class="nav-link" role="menuitem">🛠️ Kegiatan Siswa</a>
       </div>
 
       <div class="nav-actions">
@@ -947,7 +947,7 @@
       <a href="index.html"  class="nav-link" role="menuitem">🏠 Dashboard</a>
       <a href="ketentuan.html" class="nav-link" role="menuitem">📖 Ketentuan Umum</a>
       <a href="pelaksanaan.html" class="nav-link active" role="menuitem">🚀 Pelaksanaan Kegiatan</a>
-      <a href="fasilitas.html" class="nav-link" role="menuitem">🛠️ Fasilitas Siswa</a>
+      <a href="fasilitas.html" class="nav-link" role="menuitem">🛠️ Kegiatan Siswa</a>
     </div>
   </div>
 </nav>
@@ -1225,7 +1225,7 @@
           <a href="index.html" class="footer-link">🏠 Dashboard Utama</a>
           <a href="ketentuan.html" class="footer-link">📖 Ketentuan Umum</a>
           <a href="pelaksanaan.html" class="footer-link">🚀 Pelaksanaan Kegiatan</a>
-          <a href="fasilitas.html" class="footer-link">🛠️ Fasilitas Siswa</a>
+          <a href="fasilitas.html" class="footer-link">🛠️ Kegiatan Siswa</a>
         </div>
       </div>
 
@@ -1281,6 +1281,17 @@
     });
   }, { threshold: 0.12 });
   revealEls.forEach(el => observer.observe(el));
+
+  /* ── Auto-swap Hero Background ── */
+  const heroSlides = document.querySelectorAll('.hero-bg-slide');
+  if (heroSlides.length > 0) {
+    let currentHero = 0;
+    setInterval(() => {
+      heroSlides[currentHero].classList.remove('active');
+      currentHero = (currentHero + 1) % heroSlides.length;
+      heroSlides[currentHero].classList.add('active');
+    }, 5000); // Change background every 5 seconds
+  }
 </script>
 </body>
 </html>
