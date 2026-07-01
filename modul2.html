@@ -211,6 +211,7 @@
       background: currentColor;
       opacity: 0;
       transition: opacity 0.15s;
+      pointer-events: none;
     }
     .option-btn:hover {
       border-color: #93c5fd;
@@ -219,19 +220,19 @@
       transform: translateY(-1px);
     }
     .option-btn input { display: none; }
-    .option-btn:has(input:checked) {
+    .option-btn:has(input:checked), .option-btn.checked {
       border-color: #1d4ed8;
       background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
       color: white;
       transform: translateY(-2px) scale(1.02);
       box-shadow: 0 6px 18px rgba(29,78,216,0.35);
     }
-    .option-btn.yes:has(input:checked) {
+    .option-btn.yes:has(input:checked), .option-btn.yes.checked {
       background: linear-gradient(135deg, #dc2626, #ef4444);
       border-color: #dc2626;
       box-shadow: 0 6px 18px rgba(220,38,38,0.35);
     }
-    .option-btn.no:has(input:checked) {
+    .option-btn.no:has(input:checked), .option-btn.no.checked {
       background: linear-gradient(135deg, #059669, #10b981);
       border-color: #059669;
       box-shadow: 0 6px 18px rgba(5,150,105,0.35);
@@ -1028,6 +1029,31 @@
 
   // Init
   updateUI();
+
+  // Fallback for older mobile browsers that do not support CSS :has()
+  const optionBtns = document.querySelectorAll('.option-btn');
+  optionBtns.forEach(btn => {
+    const input = btn.querySelector('input[type="radio"]');
+    if (input) {
+      // Set initial checked state
+      if (input.checked) btn.classList.add('checked');
+      
+      input.addEventListener('change', () => {
+        const groupName = input.name;
+        const groupRadios = document.querySelectorAll(`input[name="${groupName}"]`);
+        groupRadios.forEach(r => {
+          const parentLabel = r.closest('.option-btn');
+          if (parentLabel) {
+            if (r.checked) {
+              parentLabel.classList.add('checked');
+            } else {
+              parentLabel.classList.remove('checked');
+            }
+          }
+        });
+      });
+    }
+  });
 
   /* ── Auto-swap Hero Background ── */
   const heroSlides = document.querySelectorAll('.hero-bg-slide');
