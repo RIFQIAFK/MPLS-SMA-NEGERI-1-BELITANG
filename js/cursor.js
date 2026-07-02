@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Only initialize custom cursor on non-touch devices (desktops/laptops)
-  if (window.matchMedia("(pointer: coarse)").matches) return;
-
   // Create cursor elements
   const cursorDot = document.createElement('div');
   cursorDot.classList.add('custom-cursor-dot');
@@ -15,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inject CSS
   const style = document.createElement('style');
   style.textContent = `
-    * {
+    body:not(.touch-device), body:not(.touch-device) * {
       cursor: none !important;
     }
     .custom-cursor-dot {
@@ -65,8 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
   let outlineX = mouseX;
   let outlineY = mouseY;
   let isMoving = false;
+  let isTouch = false;
+
+  window.addEventListener('touchstart', () => {
+    isTouch = true;
+    document.body.classList.add('touch-device');
+    cursorDot.style.display = 'none';
+    cursorOutline.style.display = 'none';
+  });
 
   window.addEventListener('mousemove', (e) => {
+    if (isTouch) return;
     mouseX = e.clientX;
     mouseY = e.clientY;
     
