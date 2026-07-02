@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Create cursor elements
+// Create cursor elements
   const cursorDot = document.createElement('div');
   cursorDot.classList.add('custom-cursor-dot');
   
@@ -143,4 +142,3 @@ document.addEventListener('DOMContentLoaded', () => {
     cursorDot.style.opacity = 1;
     cursorOutline.style.opacity = 1;
   });
-});
