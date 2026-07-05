@@ -1,99 +1,53 @@
-// ============================================================
-// SAPA Smansabel – Auth JavaScript
-// Admin Login & Session Guard
-// ============================================================
+/* ══════════════════════════════════════════════
+   js/auth.js  –  Sistem Autentikasi Siswa SAPA Smansabel
+   ══════════════════════════════════════════════ */
 
-const ADMIN_CREDENTIALS = {
-  username: 'admin',
-  password: 'mpls2026'
-};
+// ── Database Siswa ──
+// Tambahkan data siswa di sini. Format: { username, password, nama, peleton }
+const SISWA_DB = [
+  { username: "MPLS26P101", password: "PLETON1", nama: "Siswa Uji Coba", peleton: "Peleton 1" },
+  // Tambahkan siswa lain di bawah ini:
+  // { username: "MPLS26P102", password: "PLETON1", nama: "Nama Siswa", peleton: "Peleton 1" },
+];
 
-const SESSION_KEY = 'sapa_admin_session';
+const AUTH_SESSION_KEY = "sapa_siswa_session";
 
-// ── Check if already logged in (on login page) ──────────────
-function checkAlreadyLoggedIn() {
-  const session = sessionStorage.getItem(SESSION_KEY);
-  if (session) {
-    window.location.href = 'dashboard.html';
+// ── Fungsi Login ──
+function loginSiswa(username, password) {
+  const siswa = SISWA_DB.find(
+    s => s.username.toUpperCase() === username.toUpperCase() && s.password === password
+  );
+  if (siswa) {
+    sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify({
+      username: siswa.username,
+      nama: siswa.nama,
+      peleton: siswa.peleton,
+      loggedInAt: new Date().toISOString()
+    }));
+    return { success: true, nama: siswa.nama };
   }
+  return { success: false };
 }
 
-// ── Guard Dashboard page ────────────────────────────────────
-function guardDashboard() {
-  const session = sessionStorage.getItem(SESSION_KEY);
-  if (!session) {
-    window.location.href = 'admin.html';
-    return false;
-  }
-  return true;
+// ── Cek apakah sudah login ──
+function isLoggedIn() {
+  return sessionStorage.getItem(AUTH_SESSION_KEY) !== null;
 }
 
-// ── Get current session user ────────────────────────────────
-function getSessionUser() {
-  return sessionStorage.getItem(SESSION_KEY) || 'Admin';
+// ── Ambil data siswa yang sedang login ──
+function getSiswaSession() {
+  const data = sessionStorage.getItem(AUTH_SESSION_KEY);
+  return data ? JSON.parse(data) : null;
 }
 
-// ── Logout ──────────────────────────────────────────────────
-function logout() {
-  sessionStorage.removeItem(SESSION_KEY);
-  window.location.href = 'admin.html';
+// ── Logout ──
+function logoutSiswa() {
+  sessionStorage.removeItem(AUTH_SESSION_KEY);
 }
 
-// ── Login Page Logic ────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function () {
-  const loginForm  = document.getElementById('loginForm');
-  const loginAlert = document.getElementById('loginAlert');
-  const loginBtn   = document.getElementById('loginBtn');
-  const togglePwd  = document.getElementById('togglePassword');
-  const pwdInput   = document.getElementById('loginPassword');
-
-  // Password toggle
-  if (togglePwd && pwdInput) {
-    togglePwd.addEventListener('click', () => {
-      const isText = pwdInput.type === 'text';
-      pwdInput.type = isText ? 'password' : 'text';
-      togglePwd.textContent = isText ? '👁' : '🙈';
-    });
+// ── Guard: redirect ke login jika belum masuk ──
+function requireLogin() {
+  if (!isLoggedIn()) {
+    window.location.href = "login_siswa.html";
   }
-
-  // If on login page, check if already logged in
-  if (loginForm) {
-    checkAlreadyLoggedIn();
-
-    loginForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const user = document.getElementById('loginUsername').value.trim();
-      const pass = document.getElementById('loginPassword').value;
-
-      // Show loading
-      loginBtn.disabled = true;
-      loginBtn.innerHTML = '<span style="display:inline-block;width:18px;height:18px;border:3px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:8px;"></span>Masuk...';
-
-      setTimeout(() => {
-        if (user === ADMIN_CREDENTIALS.username && pass === ADMIN_CREDENTIALS.password) {
-          sessionStorage.setItem(SESSION_KEY, user);
-          window.location.href = 'dashboard.html';
-        } else {
-          loginBtn.disabled = false;
-          loginBtn.innerHTML = '🔐 Masuk ke Dashboard';
-          if (loginAlert) {
-            loginAlert.classList.remove('hidden');
-            setTimeout(() => loginAlert.classList.add('hidden'), 5000);
-          }
-          // Shake animation
-          loginForm.classList.add('shake');
-          setTimeout(() => loginForm.classList.remove('shake'), 500);
-        }
-      }, 1200);
-    });
-  }
-
-  // Logout buttons
-  const logoutBtns = document.querySelectorAll('[data-logout]');
-  logoutBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      logout();
-    });
-  });
-});
+}

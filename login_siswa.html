@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Siswa – SAPA Smansabel</title>
+  <meta name="description" content="Halaman login siswa SAPA Smansabel MPLS Ramah 2026." />
+  <link rel="icon" href="Logo Smansa.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Animated Background ── */
+    .login-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1040 30%, #0d1f3c 60%, #0a0e27 100%);
+    }
+    .login-bg::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 40%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 60%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
+      animation: bgFloat 15s ease-in-out infinite;
+    }
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(2%, -2%) rotate(1deg); }
+      66% { transform: translate(-1%, 1%) rotate(-1deg); }
+    }
+
+    /* ── Orbs ── */
+    .login-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      z-index: 0;
+      animation: orbPulse 8s ease-in-out infinite alternate;
+    }
+    .login-orb-1 {
+      width: 300px; height: 300px;
+      background: rgba(99, 102, 241, 0.2);
+      top: 10%; left: 5%;
+    }
+    .login-orb-2 {
+      width: 250px; height: 250px;
+      background: rgba(16, 185, 129, 0.15);
+      bottom: 10%; right: 10%;
+      animation-delay: 2s;
+    }
+    .login-orb-3 {
+      width: 200px; height: 200px;
+      background: rgba(59, 130, 246, 0.12);
+      top: 50%; left: 60%;
+      animation-delay: 4s;
+    }
+    @keyframes orbPulse {
+      0% { transform: scale(1); opacity: 0.3; }
+      100% { transform: scale(1.2); opacity: 0.5; }
+    }
+
+    /* ── Login Card ── */
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(15, 20, 50, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.5rem;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5),
+                  0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+      position: relative;
+      z-index: 2;
+      animation: cardSlideUp 0.6s ease-out;
+    }
+    @keyframes cardSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Brand ── */
+    .login-brand {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .login-brand-logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
+      animation: logoFloat 4s ease-in-out infinite;
+    }
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .login-brand h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .login-brand p {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* ── Form ── */
+    .login-form-group {
+      margin-bottom: 1.25rem;
+    }
+    .login-form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .login-form-input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      color: #fff;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .login-form-input::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+    }
+    .login-form-input:focus {
+      border-color: rgba(99, 102, 241, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    /* ── Button ── */
+    .login-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: #fff;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s ease;
+    }
+    .login-btn:hover::before {
+      left: 100%;
+    }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.35);
+    }
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .login-btn .spin-ring {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Alert ── */
+    .login-alert {
+      padding: 0.85rem 1rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      display: none;
+      animation: alertShake 0.4s ease;
+    }
+    @keyframes alertShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      75% { transform: translateX(-4px); }
+    }
+
+    /* ── Back Link ── */
+    .login-back {
+      display: block;
+      text-align: center;
+      margin-top: 1.5rem;
+      color: rgba(255, 255, 255, 0.4);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .login-back:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .login-card { padding: 2rem 1.25rem; }
+      .login-brand h1 { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-bg"></div>
+  <div class="login-orb login-orb-1"></div>
+  <div class="login-orb login-orb-2"></div>
+  <div class="login-orb login-orb-3"></div>
+
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="Logo Smansa.png" alt="Logo SMAN 1 Belitang" class="login-brand-logo" />
+      <h1>🔐 Login Siswa</h1>
+      <p>Masukkan username dan password yang telah diberikan oleh panitia MPLS untuk mengakses kegiatan.</p>
+    </div>
+
+    <div id="loginAlert" class="login-alert"></div>
+
+    <form id="loginSiswaForm">
+      <div class="login-form-group">
+        <label class="login-form-label" for="loginUsername">Username</label>
+        <input type="text" id="loginUsername" class="login-form-input" placeholder="Contoh: MPLS26P101" required autocomplete="off" />
+      </div>
+      <div class="login-form-group">
+        <label class="login-form-label" for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" class="login-form-input" placeholder="Masukkan password" required />
+      </div>
+
+      <button type="submit" id="loginBtn" class="login-btn">🚀 Masuk</button>
+    </form>
+
+    <a href="index.html" class="login-back">← Kembali ke Beranda</a>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    // Jika sudah login, langsung ke fasilitas
+    if (isLoggedIn()) {
+      window.location.href = 'fasilitas.html';
+    }
+
+    document.getElementById('loginSiswaForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUsername').value.trim();
+      const pass = document.getElementById('loginPassword').value;
+      const btn  = document.getElementById('loginBtn');
+      const alertBox = document.getElementById('loginAlert');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spin-ring"></span> Memverifikasi...';
+
+      // Simulasi loading 1 detik
+      setTimeout(() => {
+        const result = loginSiswa(user, pass);
+        if (result.success) {
+          btn.innerHTML = '✅ Berhasil! Mengalihkan...';
+          btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+          setTimeout(() => {
+            window.location.href = 'fasilitas.html';
+          }, 600);
+        } else {
+          btn.disabled = false;
+          btn.innerHTML = '🚀 Masuk';
+          btn.style.background = '';
+          alertBox.innerText = '❌ Username atau Password salah. Silakan coba lagi.';
+          alertBox.style.display = 'block';
+          setTimeout(() => { alertBox.style.display = 'none'; }, 5000);
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
